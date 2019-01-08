@@ -17,16 +17,10 @@ class fetch:
         self.rootUrl = settings.getRootUrl()
 
     def fetchDispatchIds(self):
-        yesterdayUrl = self.rootUrl + '?date=01072019'
         dispatchSoup = fetchSoup(self.rootUrl).find_all('a', href=True)
         lastDispatchId = settings.fetchDispatchId()
         returnArray = []
         for link in dispatchSoup:
-            url = link['href']
-            if '?dis=' in url and int(link.text) > lastDispatchId:
-                returnArray.append(link.text)
-        yesterdaySoup = fetchSoup(yesterdayUrl).find_all('a', href=True)
-        for link in yesterdaySoup:
             url = link['href']
             if '?dis=' in url and int(link.text) > lastDispatchId:
                 returnArray.append(link.text)
