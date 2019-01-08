@@ -8,7 +8,7 @@ blotFetcher = fetch()
 settings = settings()
 tweet = tweet()
 
-blockedTweets = ["Field Initiated Activity created from Mobile", "Linked to CFS"]
+blockedTweets = ["created from Mobile", "CFS", "EVENT 6", "EVENT 7", "EVNT"]
 
 class tweetLogic:
     def __init__(self):
@@ -29,10 +29,10 @@ class tweetLogic:
     def tweetStatus(self):
         result:TweetResult = TweetResult.NOTWEETS
         if len(self.dispatchIds) > 0:
-            idToTweet = self.dispatchIds.pop(0)
+            idToTweet = int(self.dispatchIds.pop(0))
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
             blockedTweetsLen = [i for i, s in enumerate(blockedTweets) if s in dispatchMsg]
-            if len(dispatchMsg) > 2 and int(idToTweet) > self.lastDispatchId and len(blockedTweetsLen) == 0:
+            if len(dispatchMsg) > 2 and idToTweet > self.lastDispatchId and len(blockedTweetsLen) == 0:
                 try:
                     dispatchUrl = "%s?dis=%s" % (settings.getRootUrl(), idToTweet)
                     tweetMsg = "%s\n%s" % (dispatchMsg, dispatchUrl)
@@ -46,7 +46,7 @@ class tweetLogic:
                 print("Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg))
                 result = TweetResult.IGNORED
             settings.saveDispatchId(idToTweet)
-            self.lastDispatchId = int(idToTweet)
+            self.lastDispatchId = idToTweet
         else:
             print("Nothing to tweet...")
         return result

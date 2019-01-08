@@ -13,7 +13,7 @@ class settings:
         return returnId
     
     def saveDispatchId(self, dispatchId):
-        self.resultsFile.write_text(dispatchId)
+        self.resultsFile.write_text(str(dispatchId))
 
     def getSettings(self):
         if self.resultsFile.is_file():
