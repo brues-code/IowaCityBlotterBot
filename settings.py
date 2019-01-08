@@ -5,9 +5,9 @@ class settings:
         self.resultsFile = Path("lastDispatch.txt")
 
     def fetchDispatchId(self):
-        returnId = ""
+        returnId = 0
         if self.resultsFile.is_file():
-            returnId = self.resultsFile.read_text()
+            returnId = int(self.resultsFile.read_text())
         return returnId
     
     def saveDispatchId(self, dispatchId):

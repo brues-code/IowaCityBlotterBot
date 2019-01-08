@@ -1,13 +1,13 @@
-from fetchBlotter import fetch
-from settings import settings
+from tweetLogic import tweetLogic
+import sched, time
 
-blotFetcher = fetch()
-settings = settings()
+s = sched.scheduler(time.time, time.sleep)
+_tweetLogic = tweetLogic()
+
+def doATweet(sc):
+    _tweetLogic.sendNext()
+    s.enter(60, 1, doATweet, (sc,))
 
 
-dispatchIds = blotFetcher.fetchDispatchIds()
-
-for dispatchId in dispatchIds:
-    details = blotFetcher.fetchDispatchDetails(dispatchId)
-    outputStr = 'Dispatch ID: %s | Message: %s' % (dispatchId, details)
-    print(outputStr)
+s.enter(5, 1, doATweet, (s,))
+s.run()
