@@ -1,6 +1,8 @@
 from fetchBlotter import fetch
 from settings import settings
 from tweetBlot import tweet
+from tweetResult import TweetResult
+from tweepy import TweepError
 
 blotFetcher = fetch()
 settings = settings()
@@ -25,16 +27,21 @@ class tweetLogic:
                     self.dispatchIds.sort()
 
     def tweetStatus(self):
-        result = False
+        result:TweetResult = TweetResult.NOTWEETS
         if len(self.dispatchIds) > 0:
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
             if len(dispatchMsg) > 0 and int(idToTweet) > self.lastDispatchId and dispatchMsg not in blockedTweets:
-                tweet.sendStatus(dispatchMsg)
-                print("Tweeted #%s: '%s'" % (idToTweet, dispatchMsg))
-                result = True
+                try:
+                    tweet.sendStatus(dispatchMsg)
+                    print("Tweeted #%s: '%s'" % (idToTweet, dispatchMsg))
+                    result = TweetResult.SENT
+                except TweepError as e:
+                    print("Twitter error #%s: '%s'" % (idToTweet, str(e)))
+                    result = TweetResult.TWITTER_ERROR
             else:
                 print("Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg))
+                result = TweetResult.IGNORED
             settings.saveDispatchId(idToTweet)
             self.lastDispatchId = int(idToTweet)
         else:

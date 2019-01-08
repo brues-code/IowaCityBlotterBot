@@ -1,7 +1,5 @@
 from urllib.request import build_opener
-
 from bs4 import BeautifulSoup
-
 from settings import settings
 
 settings = settings()
