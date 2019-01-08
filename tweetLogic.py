@@ -31,10 +31,13 @@ class tweetLogic:
         if len(self.dispatchIds) > 0:
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
-            if len(dispatchMsg) > 0 and int(idToTweet) > self.lastDispatchId and dispatchMsg not in blockedTweets:
+            blockedTweetsLen = [i for i, s in enumerate(blockedTweets) if dispatchMsg in s]
+            if len(dispatchMsg) > 0 and int(idToTweet) > self.lastDispatchId and len(blockedTweetsLen) == 0:
                 try:
-                    tweet.sendStatus(dispatchMsg)
-                    print("Tweeted #%s: '%s'" % (idToTweet, dispatchMsg))
+                    dispatchUrl = "%s?dis=%s" % (settings.getRootUrl(), idToTweet)
+                    tweetMsg = "%s\n%s" % (dispatchMsg, dispatchUrl)
+                    tweet.sendStatus(tweetMsg)
+                    print("Tweeted #%s: '%s'" % (idToTweet, tweetMsg))
                     result = TweetResult.SENT
                 except TweepError as e:
                     print("Twitter error #%s: '%s'" % (idToTweet, str(e)))

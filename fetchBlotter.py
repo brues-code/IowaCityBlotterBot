@@ -4,9 +4,6 @@ from settings import settings
 
 settings = settings()
 
-IC_ROOT_URL = 'https://www.iowa-city.org/icgov/apps/police/activityLog.asp'
-
-
 def fetchSoup(url):
     opener = build_opener()
     response = opener.open(url)
@@ -17,13 +14,19 @@ def fetchSoup(url):
 
 class fetch:
     def __init__(self):
-        pass
+        self.rootUrl = settings.getRootUrl()
 
     def fetchDispatchIds(self):
-        dispatchSoup = fetchSoup(IC_ROOT_URL).find_all('a', href=True)
+        yesterdayUrl = self.rootUrl + '?date=01072019'
+        dispatchSoup = fetchSoup(self.rootUrl).find_all('a', href=True)
         lastDispatchId = settings.fetchDispatchId()
         returnArray = []
         for link in dispatchSoup:
+            url = link['href']
+            if '?dis=' in url and int(link.text) > lastDispatchId:
+                returnArray.append(link.text)
+        yesterdaySoup = fetchSoup(yesterdayUrl).find_all('a', href=True)
+        for link in yesterdaySoup:
             url = link['href']
             if '?dis=' in url and int(link.text) > lastDispatchId:
                 returnArray.append(link.text)
@@ -31,7 +34,7 @@ class fetch:
         return returnArray
 
     def fetchDispatchDetails(self, dispatchId):
-        url = IC_ROOT_URL + ('?dis=%s' % (dispatchId))
+        url = self.rootUrl + ('?dis=%s' % (dispatchId))
         dispatchSoup = fetchSoup(url).find_all('tr')
         returnStr = ""
         for tr in dispatchSoup:
