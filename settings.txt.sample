@@ -2,5 +2,6 @@
     'CONSUMER': '',
     'CONSUMER_SECRET': '',
     'ACCESS': '',
-    'ACCESS_SECRET': ''
+    'ACCESS_SECRET': '',
+    'DISCORD_TOKEN': ''
 }

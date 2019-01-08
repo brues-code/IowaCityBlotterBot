@@ -3,6 +3,7 @@ from settings import settings
 from tweetBlot import tweet
 from tweetResult import TweetResult
 from tweepy import TweepError
+from discordBot import BlotBot
 
 blotFetcher = fetch()
 settings = settings()
@@ -14,6 +15,7 @@ class tweetLogic:
     def __init__(self):
         self.dispatchIds = []
         self.lastDispatchId = settings.fetchDispatchId()
+        self.keys = settings.getSettings()
 
     def updateIds(self):
         if len(self.dispatchIds) == 0:
@@ -37,7 +39,9 @@ class tweetLogic:
                     dispatchUrl = "%s?dis=%s" % (settings.getRootUrl(), idToTweet)
                     tweetMsg = "%s\n%s" % (dispatchMsg, dispatchUrl)
                     tweet.sendStatus(tweetMsg)
-                    print("Tweeted #%s: '%s'" % (idToTweet, tweetMsg))
+                    discordClient = BlotBot(tweetMsg)
+                    discordClient.run(self.keys['DISCORD_TOKEN'])
+                    print("Sent #%s: '%s'" % (idToTweet, tweetMsg))
                     result = TweetResult.SENT
                 except TweepError as e:
                     print("Twitter error #%s: '%s'" % (idToTweet, str(e)))
