@@ -19,7 +19,6 @@ class tweetLogic:
             print(len(newIds))
             self.dispatchIds = newIds
         else:
-            print('yes dispatchIds')
             newDispatchIds = blotFetcher.fetchDispatchIds()
             for id in newDispatchIds:
                 if id not in self.dispatchIds and int(id) > self.lastDispatchId:
