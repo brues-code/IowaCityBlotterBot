@@ -25,17 +25,20 @@ class tweetLogic:
                     self.dispatchIds.sort()
 
     def tweetStatus(self):
+        result = False
         if len(self.dispatchIds) > 0:
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
             if len(dispatchMsg) > 0 and int(idToTweet) > self.lastDispatchId and dispatchMsg not in blockedTweets:
                 tweet.sendStatus(dispatchMsg)
-                print("Tweeted: " + dispatchMsg)
+                print("Tweeted #%s: '%s'" % (idToTweet, dispatchMsg))
+                result = True
             else:
-                print("Didn't tweet: " + idToTweet)
+                print("Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg))
             settings.saveDispatchId(idToTweet)
             self.lastDispatchId = int(idToTweet)
+        return result
 
     def sendNext(self):
         self.updateIds()
-        self.tweetStatus()
+        return self.tweetStatus()
