@@ -1,6 +1,9 @@
 from urllib.request import build_opener
+
 from bs4 import BeautifulSoup
+
 from settings import settings
+
 settings = settings()
 
 IC_ROOT_URL = 'https://www.iowa-city.org/icgov/apps/police/activityLog.asp'

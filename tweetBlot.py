@@ -1,6 +1,8 @@
-import tweepy
 from os import getenv
+
+import tweepy
 from dotenv import load_dotenv
+
 load_dotenv()
 
 CONSUMER_KEY = getenv("CONSUMER")

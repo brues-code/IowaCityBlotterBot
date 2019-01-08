@@ -16,7 +16,6 @@ class tweetLogic:
     def updateIds(self):
         if len(self.dispatchIds) == 0:
             newIds = blotFetcher.fetchDispatchIds()
-            print(len(newIds))
             self.dispatchIds = newIds
         else:
             newDispatchIds = blotFetcher.fetchDispatchIds()
@@ -29,13 +28,11 @@ class tweetLogic:
         if len(self.dispatchIds) > 0:
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
-            print(idToTweet)
             if len(dispatchMsg) > 0 and int(idToTweet) > self.lastDispatchId and dispatchMsg not in blockedTweets:
                 tweet.sendStatus(dispatchMsg)
-                print("Tweeted: " + dispatchMsg)
             settings.saveDispatchId(idToTweet)
             self.lastDispatchId = int(idToTweet)
-    
+
     def sendNext(self):
         self.updateIds()
         self.tweetStatus()
