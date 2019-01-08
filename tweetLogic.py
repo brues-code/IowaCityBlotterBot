@@ -31,7 +31,7 @@ class tweetLogic:
         if len(self.dispatchIds) > 0:
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
-            blockedTweetsLen = [i for i, s in enumerate(blockedTweets) if dispatchMsg in s]
+            blockedTweetsLen = [i for i, s in enumerate(blockedTweets) if s in dispatchMsg]
             if len(dispatchMsg) > 2 and int(idToTweet) > self.lastDispatchId and len(blockedTweetsLen) == 0:
                 try:
                     dispatchUrl = "%s?dis=%s" % (settings.getRootUrl(), idToTweet)
