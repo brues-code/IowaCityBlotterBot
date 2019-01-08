@@ -30,6 +30,9 @@ class tweetLogic:
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
             if len(dispatchMsg) > 0 and int(idToTweet) > self.lastDispatchId and dispatchMsg not in blockedTweets:
                 tweet.sendStatus(dispatchMsg)
+                print("Tweeted: " + dispatchMsg)
+            else:
+                print("Didn't tweet: " + idToTweet)
             settings.saveDispatchId(idToTweet)
             self.lastDispatchId = int(idToTweet)
 
