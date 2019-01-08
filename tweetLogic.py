@@ -37,6 +37,8 @@ class tweetLogic:
                 print("Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg))
             settings.saveDispatchId(idToTweet)
             self.lastDispatchId = int(idToTweet)
+        else:
+            print("Nothing to tweet...")
         return result
 
     def sendNext(self):

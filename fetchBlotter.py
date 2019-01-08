@@ -22,8 +22,7 @@ class fetch:
         pass
 
     def fetchDispatchIds(self):
-        url = IC_ROOT_URL + '?date=01072019'
-        dispatchSoup = fetchSoup(url).find_all('a', href=True)
+        dispatchSoup = fetchSoup(IC_ROOT_URL).find_all('a', href=True)
         lastDispatchId = settings.fetchDispatchId()
         returnArray = []
         for link in dispatchSoup:
