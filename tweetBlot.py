@@ -1,19 +1,14 @@
 from os import getenv
 
 import tweepy
-from dotenv import load_dotenv
+from settings import settings
 
-load_dotenv()
-
-CONSUMER_KEY = getenv("CONSUMER")
-CONSUMER_SECRET_KEY = getenv("CONSUMER_SECRET")
-ACCESS_KEY = getenv("ACCESS")
-ACCESS_SECRET_KEY = getenv("ACCESS_SECRET")
+keys = settings().getSettings()
 
 class tweet:
     def __init__(self):
-        auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET_KEY)
-        auth.set_access_token(ACCESS_KEY, ACCESS_SECRET_KEY)
+        auth = tweepy.OAuthHandler(keys['CONSUMER'], keys['CONSUMER_SECRET'])
+        auth.set_access_token(keys['ACCESS'], keys['ACCESS_SECRET'])
         self.api = tweepy.API(auth)
     def sendStatus(self, status):
         self.api.update_status(status)

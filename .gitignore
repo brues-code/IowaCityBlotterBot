@@ -116,3 +116,4 @@ dmypy.json
 # Output folder
 results/
 lastDispatch.txt
+settings.txt
