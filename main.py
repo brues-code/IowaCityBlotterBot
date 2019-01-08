@@ -8,7 +8,7 @@ _tweetLogic = tweetLogic()
 
 def doATweet(sc):
     _tweetLogic.sendNext()
-    s.enter(60, 1, doATweet, (sc,))
+    s.enter(300, 1, doATweet, (sc,))
 
 s.enter(5, 1, doATweet, (s,))
 s.run()
