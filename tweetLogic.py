@@ -8,7 +8,8 @@ blotFetcher = fetch()
 settings = settings()
 tweet = tweet()
 
-blockedTweets = ["created from Mobile", "CFS", "EVENT 6", "EVENT 7", "EVNT"]
+blockedTweets = ["created from mobile", "cfs"]
+eventBlock = ["event", "evnt"]
 
 class tweetLogic:
     def __init__(self):
@@ -31,8 +32,9 @@ class tweetLogic:
         if len(self.dispatchIds) > 0:
             idToTweet = int(self.dispatchIds.pop(0))
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
-            blockedTweetsLen = [i for i, s in enumerate(blockedTweets) if s in dispatchMsg]
-            if len(dispatchMsg) > 2 and idToTweet > self.lastDispatchId and len(blockedTweetsLen) == 0:
+            blockedTweetsLen = len([i for i, s in enumerate(blockedTweets) if s in dispatchMsg.lower()])
+            eventFilter = len([i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)])
+            if len(dispatchMsg) > 2 and idToTweet > self.lastDispatchId and blockedTweetsLen == 0 and eventFilter == 0:
                 try:
                     dispatchUrl = "%s?dis=%s" % (settings.getRootUrl(), idToTweet)
                     tweetMsg = "%s\n%s" % (dispatchMsg, dispatchUrl)
