@@ -9,7 +9,7 @@ settings = settings()
 tweet = tweet()
 
 blockedTweets = ["created from mobile", "cfs"]
-eventBlock = ["event", "evnt"]
+eventBlock = ["event", "evnt", "ref amb"]
 
 class tweetLogic:
     def __init__(self):
@@ -19,14 +19,8 @@ class tweetLogic:
     def updateIds(self):
         if len(self.dispatchIds) == 0:
             newIds = blotFetcher.fetchDispatchIds()
+            print("Added %s new ids" % (len(newIds)))
             self.dispatchIds = newIds
-        else:
-            newDispatchIds = blotFetcher.fetchDispatchIds()
-            for id in newDispatchIds:
-                if id not in self.dispatchIds and int(id) > self.lastDispatchId:
-                    print("Added dispatchId: " + id)
-                    self.dispatchIds.append(id)
-                    self.dispatchIds.sort()
 
     def tweetStatus(self):
         result:TweetResult = TweetResult.NOTWEETS
