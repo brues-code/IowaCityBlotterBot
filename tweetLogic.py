@@ -24,6 +24,7 @@ class tweetLogic:
             newDispatchIds = blotFetcher.fetchDispatchIds()
             for id in newDispatchIds:
                 if id not in self.dispatchIds and int(id) > self.lastDispatchId:
+                    print("Added dispatchId: " + id)
                     self.dispatchIds.append(id)
                     self.dispatchIds.sort()
 
