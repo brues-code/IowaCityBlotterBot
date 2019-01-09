@@ -17,23 +17,31 @@ class fetch:
         self.rootUrl = settings.getRootUrl()
 
     def fetchDispatchIds(self):
-        dispatchSoup = fetchSoup(self.rootUrl).find_all('a', href=True)
-        lastDispatchId = settings.fetchDispatchId()
-        returnArray = []
-        for link in dispatchSoup:
-            url = link['href']
-            if '?dis=' in url and int(link.text) > lastDispatchId:
-                returnArray.append(link.text)
-        returnArray.sort()
-        return returnArray
+        while True:
+            try:
+                dispatchSoup = fetchSoup(self.rootUrl).find_all('a', href=True)
+                lastDispatchId = settings.fetchDispatchId()
+                returnArray = []
+                for link in dispatchSoup:
+                    url = link['href']
+                    if '?dis=' in url and int(link.text) > lastDispatchId:
+                        returnArray.append(link.text)
+                returnArray.sort()
+                return returnArray
+            except:
+                pass
 
     def fetchDispatchDetails(self, dispatchId):
-        url = self.rootUrl + ('?dis=%s' % (dispatchId))
-        dispatchSoup = fetchSoup(url).find_all('tr')
-        returnStr = ""
-        for tr in dispatchSoup:
-            th = tr.th
-            if th is not None:
-                if 'Details' in th.text:
-                    returnStr = tr.td.text
-        return returnStr
+        while True:
+            try:
+                url = self.rootUrl + ('?dis=%s' % (dispatchId))
+                dispatchSoup = fetchSoup(url).find_all('tr')
+                returnStr = ""
+                for tr in dispatchSoup:
+                    th = tr.th
+                    if th is not None:
+                        if 'Details' in th.text:
+                            returnStr = tr.td.text
+                return returnStr
+            except:
+                pass
