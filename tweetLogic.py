@@ -54,7 +54,7 @@ class tweetLogic:
                     tweetMsg = "%s\n%s" % (dispatchMsg, dispatchUrl)
                     newTweet = tweet.sendStatus(tweetMsg)
                     newTweetUrl = "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)
-                    printWithStamp("%s : '%s'" % (newTweetUrl, tweetMsg))
+                    printWithStamp("%s\n%s" % (newTweetUrl, tweetMsg))
                     result = TweetResult.SENT
                 except TweepError as e:
                     printWithStamp("Twitter error #%s: '%s'" % (idToTweet, str(e)))
