@@ -9,4 +9,4 @@ class tweet:
         auth.set_access_token(keys['ACCESS'], keys['ACCESS_SECRET'])
         self.api = tweepy.API(auth)
     def sendStatus(self, status):
-        self.api.update_status(status)
+        return self.api.update_status(status)

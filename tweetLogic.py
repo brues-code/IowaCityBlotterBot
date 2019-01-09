@@ -33,8 +33,9 @@ class tweetLogic:
                 try:
                     dispatchUrl = "%s?dis=%s" % (settings.getRootUrl(), idToTweet)
                     tweetMsg = "%s\n%s" % (dispatchMsg, dispatchUrl)
-                    tweet.sendStatus(tweetMsg)
-                    print("Sent #%s: '%s'" % (idToTweet, tweetMsg))
+                    newTweet = tweet.sendStatus(tweetMsg)
+                    newTweetUrl = "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)
+                    print("%s : '%s'" % (newTweetUrl, tweetMsg))
                     result = TweetResult.SENT
                 except TweepError as e:
                     print("Twitter error #%s: '%s'" % (idToTweet, str(e)))
