@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from urllib.request import build_opener
 from bs4 import BeautifulSoup
 from settings import settings
@@ -17,29 +18,35 @@ class fetch:
         self.rootUrl = settings.getRootUrl()
 
     def fetchDispatchIds(self):
+        lastDispatchId = settings.fetchDispatchId()
+        six_hour_ago_date_time = datetime.now() - timedelta(hours = 6)
+        st = six_hour_ago_date_time.strftime('%m%d%Y')
+        url = "%s?date=%s" % (self.rootUrl, st)
         while True:
             try:
-                dispatchSoup = fetchSoup(self.rootUrl).find_all('a', href=True)
-                lastDispatchId = settings.fetchDispatchId()
+                dispatchSoup = fetchSoup(url)
+                dispatchTable = dispatchSoup.find('tbody', {"valign" : "top"})
                 returnArray = []
-                for link in dispatchSoup:
-                    url = link['href']
-                    if '?dis=' in url and int(link.text) > lastDispatchId:
-                        returnArray.append(link.text)
+                for tRow in dispatchTable:
+                    hasNone = tRow.find('strong')
+                    if hasNone and hasNone != -1:
+                        dispatchId = tRow.find('a').text
+                        if int(dispatchId) > lastDispatchId:
+                            returnArray.append(dispatchId)
                 returnArray.sort()
                 return returnArray
             except:
                 pass
 
     def fetchDispatchDetails(self, dispatchId):
+        url = self.rootUrl + ('?dis=%s' % (dispatchId))
         while True:
             try:
-                url = self.rootUrl + ('?dis=%s' % (dispatchId))
                 dispatchSoup = fetchSoup(url).find_all('tr')
                 returnStr = ""
                 for tr in dispatchSoup:
                     th = tr.th
-                    if th is not None:
+                    if th:
                         if 'Details' in th.text:
                             returnStr = tr.td.text
                 return returnStr
