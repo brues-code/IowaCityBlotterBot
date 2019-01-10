@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 import emoji
 from tweepy import TweepError
 from fetchBlotter import fetch
@@ -15,7 +15,7 @@ blockedTweets = ["created from mobile", "cfs"]
 eventBlock = ["event", "evnt", "ref amb"]
 
 def printWithStamp( inputStr ):
-    st = datetime.datetime.now().strftime('%H:%M:%S')
+    st = datetime.now().strftime('%H:%M:%S')
     outputStr = "[%s]: %s" % (st, inputStr)
     print(outputStr)
 
