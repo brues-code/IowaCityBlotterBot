@@ -6,6 +6,7 @@ from settings import settings
 settings = settings()
 
 def fetchSoup(url):
+    settings.printWithStamp("Fetching " + url)
     opener = build_opener()
     response = opener.open(url)
     data = response.read()
@@ -21,7 +22,7 @@ class fetch:
         lastDispatchId = settings.fetchDispatchId()
         six_hour_ago_date_time = datetime.now() - timedelta(hours = 6)
         st = six_hour_ago_date_time.strftime('%m%d%Y')
-        url = "%s?date=%s" % (self.rootUrl, st)
+        url = "%sdate=%s" % (self.rootUrl, st)
         while True:
             try:
                 dispatchSoup = fetchSoup(url)
@@ -30,8 +31,8 @@ class fetch:
                 for tRow in dispatchTable:
                     hasNone = tRow.find('strong')
                     if hasNone and hasNone != -1:
-                        dispatchId = tRow.find('a').text
-                        if int(dispatchId) > lastDispatchId:
+                        dispatchId = int(tRow.find('a').text)
+                        if dispatchId > lastDispatchId:
                             returnArray.append(dispatchId)
                 returnArray.sort()
                 return returnArray
@@ -39,7 +40,7 @@ class fetch:
                 pass
 
     def fetchDispatchDetails(self, dispatchId):
-        url = self.rootUrl + ('?dis=%s' % (dispatchId))
+        url = "%sdis=%s" % (self.rootUrl, dispatchId)
         while True:
             try:
                 dispatchSoup = fetchSoup(url).find_all('tr')
