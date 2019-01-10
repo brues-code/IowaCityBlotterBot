@@ -37,9 +37,9 @@ class tweetLogic:
             result = TweetResult.IGNORED
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
-            blockedTweetsLen = len([i for i, s in enumerate(blockedTweets) if s in dispatchMsg.lower()])
-            eventFilter = len([i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)])
-            if len(dispatchMsg) > 2 and blockedTweetsLen == 0 and eventFilter == 0:
+            noBlockedTweets = len([i for i, s in enumerate(blockedTweets) if s in dispatchMsg.lower()]) == 0
+            noEventTweets = len([i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)]) == 0
+            if len(dispatchMsg) > 2 and noBlockedTweets and noEventTweets:
                 try:
                     tweetMsg = "%s\n%sdis=%s" % (dispatchMsg, settings.getRootUrl(), idToTweet)
                     #emojizedTweet = appendEmojis(tweetMsg)
