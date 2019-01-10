@@ -10,7 +10,7 @@ settings = settings()
 tweet = tweet()
 
 blockedTweets = ["created from mobile", "cfs"]
-eventBlock = ["event", "evnt", "ref amb"]
+eventBlock = ["event", "evnt", "ref amb", "req cert"]
 
 def appendEmojis( inputStr ):
     splitStr = inputStr.split()
