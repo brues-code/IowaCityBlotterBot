@@ -1,27 +1,36 @@
 from datetime import datetime
 from pathlib import Path
 
+resultsFile = "lastDispatch.txt"
+settingsFile = "settings.txt"
+IC_ROOT_URL = 'https://www.iowa-city.org/icgov/apps/police/activityLog.asp?'
+
 class settings:
     def __init__(self):
-        self.resultsFile = Path("lastDispatch.txt")
-        self.settingsFile = Path("settings.txt")
-        self.IC_ROOT_URL = 'https://www.iowa-city.org/icgov/apps/police/activityLog.asp?'
+        pass
 
     def fetchDispatchId(self):
         returnId = 0
-        if self.resultsFile.is_file():
-            returnId = int(self.resultsFile.read_text())
+        f=open(resultsFile, "r")
+        if f.readable():
+            returnId = int(f.read())
+        f.close()
         return returnId
     
     def saveDispatchId(self, dispatchId):
-        self.resultsFile.write_text(str(dispatchId))
+        f=open(resultsFile, "w")
+        if f.writable():
+            f.write(str(dispatchId))
+        f.close()
 
     def getSettings(self):
-        if self.resultsFile.is_file():
-            return eval(self.settingsFile.read_text())
+        f=open(settingsFile, "r")
+        if f.readable():
+            return eval(f.read())
+        f.close()
 
     def getRootUrl(self):
-        return self.IC_ROOT_URL
+        return IC_ROOT_URL
 
     def printWithStamp(self, inputStr, noEnd=False):
         st = datetime.now().strftime('%H:%M:%S')
