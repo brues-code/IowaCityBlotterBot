@@ -31,7 +31,7 @@ class tweetLogic:
             settings.printWithStamp("Added %s new ids" % (len(self.dispatchIds)))
 
     def tweetStatus(self):
-        result:TweetResult = TweetResult.NOTWEETS
+        result = TweetResult.NOTWEETS
         logMsg = "Nothing to tweet..."
         if len(self.dispatchIds) > 0:
             idToTweet = self.dispatchIds.pop(0)
