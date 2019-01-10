@@ -11,7 +11,7 @@ def doATweet(sc):
     secs = 900
     if sentTweet == TweetResult.NOTWEETS:
         secs = 300
-    elif sentTweet == TweetResult.IGNORED or sentTweet == TweetResult.TWITTER_ERROR:
+    elif sentTweet != TweetResult.SENT:
         secs = 5
     s.enter(secs, 1, doATweet, (sc,))
 
