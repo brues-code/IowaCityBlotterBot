@@ -11,10 +11,13 @@ class settings:
 
     def fetchDispatchId(self):
         returnId = 0
-        f=open(resultsFile, "r")
-        if f.readable():
-            returnId = int(f.read())
-        f.close()
+        try:
+            f=open(resultsFile, "r")
+            if f.readable():
+                returnId = int(f.read())
+            f.close()
+        except:
+            pass
         return returnId
     
     def saveDispatchId(self, dispatchId):
