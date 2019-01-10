@@ -32,6 +32,7 @@ class tweetLogic:
 
     def tweetStatus(self):
         result:TweetResult = TweetResult.NOTWEETS
+        logMsg = "Nothing to tweet..."
         if len(self.dispatchIds) > 0:
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
@@ -39,22 +40,20 @@ class tweetLogic:
             eventFilter = len([i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)])
             if len(dispatchMsg) > 2 and blockedTweetsLen == 0 and eventFilter == 0:
                 try:
-                    dispatchUrl = "%sdis=%s" % (settings.getRootUrl(), idToTweet)
-                    #emojizedStr = appendEmojis(dispatchMsg)
-                    tweetMsg = "%s\n%s" % (dispatchMsg, dispatchUrl)
+                    tweetMsg = "%s\n%sdis=%s" % (dispatchMsg, settings.getRootUrl(), idToTweet)
+                    #emojizedTweet = appendEmojis(tweetMsg)
                     newTweet = tweet.sendStatus(tweetMsg)
                     newTweetUrl = "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)
-                    settings.printWithStamp("%s\n%s" % (newTweetUrl, tweetMsg))
+                    logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
                     result = TweetResult.SENT
                 except TweepError as e:
-                    settings.printWithStamp("Twitter error #%s: '%s'" % (idToTweet, str(e)))
+                    logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
                     result = TweetResult.TWITTER_ERROR
             else:
-                settings.printWithStamp("Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg))
+                logMsg = "Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg)
                 result = TweetResult.IGNORED
             settings.saveDispatchId(idToTweet)
-        else:
-            settings.printWithStamp("Nothing to tweet...")
+        settings.printWithStamp(logMsg)
         return result
 
     def sendNext(self):

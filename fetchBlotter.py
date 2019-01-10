@@ -47,9 +47,8 @@ class fetch:
                 returnStr = ""
                 for tr in dispatchSoup:
                     th = tr.th
-                    if th:
-                        if 'Details' in th.text:
-                            returnStr = tr.td.text
+                    if th and 'Details' in th.text:
+                        returnStr = tr.td.text
                 return returnStr
             except:
                 pass
