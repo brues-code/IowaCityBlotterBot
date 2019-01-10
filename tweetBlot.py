@@ -8,5 +8,6 @@ class tweet:
         auth = tweepy.OAuthHandler(keys['CONSUMER'], keys['CONSUMER_SECRET'])
         auth.set_access_token(keys['ACCESS'], keys['ACCESS_SECRET'])
         self.api = tweepy.API(auth)
+        self.duplicateErrorCode = 187
     def sendStatus(self, status):
         return self.api.update_status(status)

@@ -7,13 +7,8 @@ s = sched.scheduler(time.time, time.sleep)
 _tweetLogic = tweetLogic()
 
 def doATweet(sc):
-    sentTweet = _tweetLogic.sendNext()
-    secs = 900
-    if sentTweet == TweetResult.NOTWEETS:
-        secs = 300
-    elif sentTweet != TweetResult.SENT:
-        secs = 5
-    s.enter(secs, 1, doATweet, (sc,))
+    secs = _tweetLogic.sendNext()
+    s.enter(secs.value, 1, doATweet, (sc,))
 
 s.enter(5, 1, doATweet, (s,))
 s.run()

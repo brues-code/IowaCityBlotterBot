@@ -12,7 +12,7 @@ tweet = tweet()
 blockedTweets = ["created from mobile", "cfs"]
 eventBlock = ["event", "evnt", "ref amb", "req cert"]
 
-def appendEmojis( inputStr ):
+def appendEmojis(inputStr):
     splitStr = inputStr.split()
     emojiOutput = " "
     for word in splitStr:
@@ -34,6 +34,7 @@ class tweetLogic:
         result = TweetResult.NOTWEETS
         logMsg = "Nothing to tweet..."
         if len(self.dispatchIds) > 0:
+            result = TweetResult.IGNORED
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
             blockedTweetsLen = len([i for i, s in enumerate(blockedTweets) if s in dispatchMsg.lower()])
@@ -48,11 +49,12 @@ class tweetLogic:
                     result = TweetResult.SENT
                 except TweepError as e:
                     logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
-                    result = TweetResult.TWITTER_ERROR
+                    if e.api_code != tweet.duplicateErrorCode:
+                        result = TweetResult.ERROR
             else:
                 logMsg = "Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg)
-                result = TweetResult.IGNORED
-            settings.saveDispatchId(idToTweet)
+            if result != TweetResult.ERROR:
+                settings.saveDispatchId(idToTweet)
         settings.printWithStamp(logMsg)
         return result
 
