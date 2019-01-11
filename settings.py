@@ -1,5 +1,4 @@
 from datetime import datetime
-from pathlib import Path
 
 resultsFile = "lastDispatch.txt"
 settingsFile = "settings.txt"

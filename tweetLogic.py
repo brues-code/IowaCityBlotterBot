@@ -1,4 +1,3 @@
-import emoji
 from tweepy import TweepError
 from fetchBlotter import fetch
 from settings import settings
@@ -11,15 +10,6 @@ tweet = tweet()
 
 blockedTweets = ["created from mobile", "cfs"]
 eventBlock = ["event", "evnt", "ref amb", "req cert"]
-
-def appendEmojis(inputStr):
-    splitStr = inputStr.split()
-    emojiOutput = " "
-    for word in splitStr:
-        emojiStr = ":" + word.lower() + ":"
-        if (emojiStr in emoji.EMOJI_ALIAS_UNICODE or emojiStr in emoji.EMOJI_UNICODE) and len(word) > 2:
-            emojiOutput = emojiOutput + emojiStr
-    return emoji.emojize(inputStr + emojiOutput, use_aliases=True)
 
 class tweetLogic:
     def __init__(self):
@@ -39,7 +29,7 @@ class tweetLogic:
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
             noBlockedTweets = len([i for i, s in enumerate(blockedTweets) if s in dispatchMsg.lower()]) == 0
             noEventTweets = len([i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)]) == 0
-            if len(dispatchMsg) > 2 and noBlockedTweets and noEventTweets:
+            if len(dispatchMsg) > 10 and noBlockedTweets and noEventTweets:
                 try:
                     tweetMsg = "%s\n%sdis=%s" % (dispatchMsg, settings.getRootUrl(), idToTweet)
                     #emojizedTweet = appendEmojis(tweetMsg)

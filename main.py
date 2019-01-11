@@ -1,9 +1,9 @@
-import sched
-import time
+from sched import scheduler
+from time import sleep, time
 from tweetLogic import tweetLogic
 from tweetResult import TweetResult
 
-s = sched.scheduler(time.time, time.sleep)
+s = scheduler(time, sleep)
 _tweetLogic = tweetLogic()
 
 def doATweet(sc):

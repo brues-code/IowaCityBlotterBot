@@ -5,7 +5,8 @@ from settings import settings
 
 settings = settings()
 
-blockedCategories = ["MVA/PROPERTY DAMAGE ACCIDENT", "Z Breathing Problems", "911 HANGUP"]
+blockedCategories = ["MVA/PROPERTY DAMAGE ACCIDENT", "911 HANGUP"]
+zBlock = ["Z"]
 
 def fetchSoup(url):
     settings.printWithStamp("Fetching " + url)
@@ -32,10 +33,13 @@ class fetch:
             hasNone = tRow.find('strong')
             if hasNone and hasNone != -1:
                 dispatchId = int(tRow.find('a').text)
-                activityCat = str(tRow.find_all('td')[2].text)
-                noBlockedCats = len([i for i, s in enumerate(blockedCategories) if s in activityCat.strip()]) == 0
-                if dispatchId > lastDispatchId and noBlockedCats:
+                activityCat = str(tRow.find_all('td')[2].text).strip()
+                noBlockedCats = len([i for i, s in enumerate(blockedCategories) if s in activityCat]) == 0
+                hasNoZCat = len([i for i, s in enumerate(zBlock) if activityCat.startswith(s)]) == 0
+                if dispatchId > lastDispatchId and noBlockedCats and hasNoZCat:
                     returnArray.append(dispatchId)
+                elif not hasNoZCat:
+                    print(dispatchId)
         returnArray.sort()
         return returnArray
         
