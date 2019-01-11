@@ -46,6 +46,6 @@ class fetch:
         url = "%sdis=%s" % (self.rootUrl, dispatchId)
         while True:
             try:
-                return fetchSoup(url).find_all('tr').pop().td.text
+                return fetchSoup(url).find_all('td').pop().text
             except:
                 pass
