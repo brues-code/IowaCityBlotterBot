@@ -5,6 +5,8 @@ from settings import settings
 
 settings = settings()
 
+blockedCategories = ["MVA/PROPERTY DAMAGE ACCIDENT"]
+
 def fetchSoup(url):
     settings.printWithStamp("Fetching " + url)
     opener = build_opener()
@@ -24,18 +26,17 @@ class fetch:
         st = six_hour_ago_date_time.strftime('%m%d%Y')
         url = "%sdate=%s" % (self.rootUrl, st)
         returnArray = []
-        try:
-            dispatchSoup = fetchSoup(url)
-            dispatchTable = dispatchSoup.find('tbody', {"valign" : "top"})
-            for tRow in dispatchTable:
-                hasNone = tRow.find('strong')
-                if hasNone and hasNone != -1:
-                    dispatchId = int(tRow.find('a').text)
-                    if dispatchId > lastDispatchId:
-                        returnArray.append(dispatchId)
-            returnArray.sort()
-        except:
-            pass
+        dispatchSoup = fetchSoup(url)
+        dispatchTable = dispatchSoup.find('tbody', {"valign" : "top"})
+        for tRow in dispatchTable:
+            hasNone = tRow.find('strong')
+            if hasNone and hasNone != -1:
+                dispatchId = int(tRow.find('a').text)
+                activityCat = tRow.find_all('td')[2].text
+                noBlockedCats = len([i for i, s in enumerate(blockedCategories) if s in activityCat]) == 0
+                if dispatchId > lastDispatchId and noBlockedCats:
+                    returnArray.append(dispatchId)
+        returnArray.sort()
         return returnArray
         
 
@@ -43,12 +44,6 @@ class fetch:
         url = "%sdis=%s" % (self.rootUrl, dispatchId)
         while True:
             try:
-                dispatchSoup = fetchSoup(url).find_all('tr')
-                returnStr = ""
-                for tr in dispatchSoup:
-                    th = tr.th
-                    if th and 'Details' in th.text:
-                        returnStr = tr.td.text
-                return returnStr
+                return fetchSoup(url).find_all('tr').pop().td.text
             except:
                 pass
