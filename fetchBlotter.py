@@ -38,8 +38,6 @@ class fetch:
                 hasNoZCat = len([i for i, s in enumerate(zBlock) if activityCat.startswith(s)]) == 0
                 if dispatchId > lastDispatchId and noBlockedCats and hasNoZCat:
                     returnArray.append(dispatchId)
-                elif not hasNoZCat:
-                    print(dispatchId)
         returnArray.sort()
         return returnArray
         
