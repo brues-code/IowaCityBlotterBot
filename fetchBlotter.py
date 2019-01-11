@@ -5,7 +5,7 @@ from settings import settings
 
 settings = settings()
 
-blockedCategories = ["MVA/PROPERTY DAMAGE ACCIDENT", "911 HANGUP"]
+blockedCategories = ["MVA/PROPERTY DAMAGE ACCIDENT", "911 HANGUP", "SUICIDE/LAW"]
 zBlock = ["Z"]
 
 def fetchSoup(url):
