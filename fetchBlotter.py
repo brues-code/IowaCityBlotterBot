@@ -6,7 +6,7 @@ from settings import settings
 settings = settings()
 
 blockedCategories = ["MVA/PROPERTY DAMAGE ACCIDENT", "911 HANGUP", "SUICIDE/LAW"]
-zBlock = ["Z"]
+zBlock = ["Z", "TR/"]
 
 def fetchSoup(url):
     settings.printWithStamp("Fetching " + url)
