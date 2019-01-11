@@ -27,12 +27,11 @@ class tweetLogic:
             result = TweetResult.IGNORED
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
-            noBlockedTweets = len([i for i, s in enumerate(blockedTweets) if s in dispatchMsg.lower()]) == 0
-            noEventTweets = len([i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)]) == 0
-            if len(dispatchMsg) > 10 and noBlockedTweets and noEventTweets:
+            hasBlockedTweets = [i for i, s in enumerate(blockedTweets) if s in dispatchMsg.lower()]
+            hasEventTweets = [i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)]
+            if len(dispatchMsg) > 10 and not hasBlockedTweets and not hasEventTweets:
                 try:
                     tweetMsg = "%s\n%s" % (dispatchMsg, settings.getUrl(dis=idToTweet))
-                    #emojizedTweet = appendEmojis(tweetMsg)
                     newTweet = tweet.sendStatus(tweetMsg)
                     newTweetUrl = "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)
                     logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
