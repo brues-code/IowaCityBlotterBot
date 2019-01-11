@@ -31,7 +31,7 @@ class tweetLogic:
             noEventTweets = len([i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)]) == 0
             if len(dispatchMsg) > 10 and noBlockedTweets and noEventTweets:
                 try:
-                    tweetMsg = "%s\n%sdis=%s" % (dispatchMsg, settings.getRootUrl(), idToTweet)
+                    tweetMsg = "%s\n%s" % (dispatchMsg, settings.getUrl(dis=idToTweet))
                     #emojizedTweet = appendEmojis(tweetMsg)
                     newTweet = tweet.sendStatus(tweetMsg)
                     newTweetUrl = "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)

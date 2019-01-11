@@ -31,13 +31,15 @@ class settings:
             return eval(f.read())
         f.close()
 
-    def getRootUrl(self):
-        return IC_ROOT_URL
+    def getUrl(self, date=None, dis=None):
+        url = IC_ROOT_URL
+        if date:
+            url = "%sdate=%s&" % (url, date)
+        if dis:
+            url = "%sdis=%s" % (url, dis)
+        return url
 
-    def printWithStamp(self, inputStr, noEnd=False):
+    def printWithStamp(self, inputStr):
         st = datetime.now().strftime('%H:%M:%S')
         outputStr = "[%s]: %s" % (st, inputStr)
-        if noEnd:
-            print(outputStr, end='', flush=True)
-        else:
-            print(outputStr)
+        print(outputStr)
