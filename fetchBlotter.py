@@ -30,8 +30,8 @@ class fetch:
         dispatchSoup = fetchSoup(url)
         dispatchTable = dispatchSoup.find('tbody', {"valign" : "top"})
         for tRow in dispatchTable:
-            hasNone = tRow.find('strong')
-            if hasNone and hasNone != -1:
+            hasNote = tRow.find('strong')
+            if hasNote and hasNote != -1:
                 dispatchId = int(tRow.find('a').text)
                 activityCat = str(tRow.find_all('td')[2].text).strip()
                 noBlockedCats = len([i for i, s in enumerate(blockedCategories) if s in activityCat]) == 0
