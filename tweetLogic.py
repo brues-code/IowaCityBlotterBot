@@ -29,7 +29,7 @@ class tweetLogic:
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
             hasBlockedTweets = [i for i, s in enumerate(blockedTweets) if s in dispatchMsg.lower()]
             hasEventTweets = [i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)]
-            if len(dispatchMsg) > 10 and not hasBlockedTweets and not hasEventTweets:
+            if len(dispatchMsg) > 15 and not hasBlockedTweets and not hasEventTweets:
                 try:
                     tweetMsg = "%s\n%s" % (dispatchMsg, settings.getUrl(dis=idToTweet))
                     newTweet = tweet.sendStatus(tweetMsg)
