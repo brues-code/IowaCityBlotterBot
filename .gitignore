@@ -119,6 +119,9 @@ dmypy.json
 # Output folder
 results/
 
+# Logs
+logs/
+
 #ICBlotBot Settings
 lastDispatch.txt
 settings.txt

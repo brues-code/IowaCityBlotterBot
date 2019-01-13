@@ -1,4 +1,3 @@
-from datetime import datetime, timedelta
 from urllib.request import build_opener
 from bs4 import BeautifulSoup
 from settings import settings
@@ -20,7 +19,8 @@ class fetch:
     def fetchDispatchIds(self) -> list:
         returnArray = []
         lastDispatchId = settings.fetchDispatchId()
-        url = settings.getUrl((datetime.now() - timedelta(hours = 6)).strftime('%m%d%Y'))
+        dateStamp = settings.getDateStamp()
+        url = settings.getUrl(dateStamp)
         dispatchTable = fetchSoup(url).find('tbody', {"valign" : "top"})
         for tRow in dispatchTable:
             hasNote = tRow.find('strong')

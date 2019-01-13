@@ -1,5 +1,7 @@
-from datetime import datetime
+import os
+from datetime import datetime, timedelta
 
+logDirectory = "logs/"
 resultsFile = "lastDispatch.txt"
 settingsFile = "settings.txt"
 IC_ROOT_URL = 'https://www.iowa-city.org/icgov/apps/police/activityLog.asp?'
@@ -41,4 +43,16 @@ class settings:
     def printWithStamp(self, inputStr:str):
         st:str = datetime.now().strftime('%H:%M:%S')
         outputStr:str = "[%s]: %s" % (st, inputStr)
+        self.addToLog(outputStr)
         print(outputStr)
+
+    def addToLog(self, logMessage:str):
+        if not os.path.exists(logDirectory):
+            os.makedirs(logDirectory)
+        f=open("%s%s.txt" % (logDirectory, self.getDateStamp()), "a")
+        if f.writable():
+            f.write(logMessage + "\n")
+        f.close()
+
+    def getDateStamp(self) -> str:
+        return (datetime.now() - timedelta(hours = 6)).strftime('%m%d%Y')
