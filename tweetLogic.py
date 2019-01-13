@@ -16,7 +16,7 @@ class tweetLogic:
     def __init__(self):
         self.dispatchIds:list = []
 
-    def isTweetable(self, message) -> bool:
+    def isTweetable(self, message:str) -> bool:
         message = message.lower()
         hasBlockedTweets = [i for i, s in enumerate(BLOCKED_TWEETS) if s in message]
         hasEventTweets = [i for i, s in enumerate(EVENT_BLOCK) if message.startswith(s)]

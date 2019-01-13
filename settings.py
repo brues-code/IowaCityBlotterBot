@@ -19,7 +19,7 @@ class settings:
             pass
         return returnId
     
-    def saveDispatchId(self, dispatchId):
+    def saveDispatchId(self, dispatchId:int):
         f=open(resultsFile, "w")
         if f.writable():
             f.write(str(dispatchId))
@@ -31,12 +31,14 @@ class settings:
             return eval(f.read())
         f.close()
 
-    def getUrl(self, date=None, dis=None) -> str:
-        dateStr = "date=%s&" % (date) if date else ""
-        disStr = "dis=%s" % (dis) if dis else ""
-        return IC_ROOT_URL + dateStr + disStr
+    def getUrl(self, date:str="", dis:str="") -> str:
+        if date:
+            date = "date=%s&" % (date)
+        if dis:
+            dis = "dis=%s" % (dis)
+        return IC_ROOT_URL + date + dis
 
-    def printWithStamp(self, inputStr):
-        st = datetime.now().strftime('%H:%M:%S')
-        outputStr = "[%s]: %s" % (st, inputStr)
+    def printWithStamp(self, inputStr:str):
+        st:str = datetime.now().strftime('%H:%M:%S')
+        outputStr:str = "[%s]: %s" % (st, inputStr)
         print(outputStr)

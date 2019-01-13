@@ -36,7 +36,7 @@ class fetch:
         return returnArray
         
 
-    def fetchDispatchDetails(self, id) -> str:
+    def fetchDispatchDetails(self, id:int) -> str:
         url = settings.getUrl(dis=id)
         while True:
             try:
