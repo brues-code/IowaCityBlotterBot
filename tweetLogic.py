@@ -15,6 +15,12 @@ class tweetLogic:
     def __init__(self):
         self.dispatchIds = []
 
+    def isTweetable(self, message):
+        message = message.lower()
+        hasBlockedTweets = [i for i, s in enumerate(blockedTweets) if s in message]
+        hasEventTweets = [i for i, s in enumerate(eventBlock) if message.startswith(s)]
+        return len(message) > 15 and not hasBlockedTweets and not hasEventTweets
+
     def updateIds(self):
         if len(self.dispatchIds) == 0:
             self.dispatchIds = blotFetcher.fetchDispatchIds()
@@ -27,9 +33,7 @@ class tweetLogic:
             result = TweetResult.IGNORED
             idToTweet = self.dispatchIds.pop(0)
             dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
-            hasBlockedTweets = [i for i, s in enumerate(blockedTweets) if s in dispatchMsg.lower()]
-            hasEventTweets = [i for i, s in enumerate(eventBlock) if dispatchMsg.lower().startswith(s)]
-            if len(dispatchMsg) > 15 and not hasBlockedTweets and not hasEventTweets:
+            if self.isTweetable(dispatchMsg):
                 try:
                     tweetMsg = "%s\n%s" % (dispatchMsg, settings.getUrl(dis=idToTweet))
                     newTweet = tweet.sendStatus(tweetMsg)
