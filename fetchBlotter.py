@@ -17,7 +17,7 @@ class fetch:
     def __init__(self):
         pass
 
-    def fetchDispatchIds(self):
+    def fetchDispatchIds(self) -> list:
         returnArray = []
         lastDispatchId = settings.fetchDispatchId()
         url = settings.getUrl((datetime.now() - timedelta(hours = 6)).strftime('%m%d%Y'))
@@ -36,7 +36,7 @@ class fetch:
         return returnArray
         
 
-    def fetchDispatchDetails(self, id):
+    def fetchDispatchDetails(self, id) -> str:
         url = settings.getUrl(dis=id)
         while True:
             try:

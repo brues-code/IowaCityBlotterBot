@@ -8,7 +8,7 @@ class settings:
     def __init__(self):
         pass
 
-    def fetchDispatchId(self):
+    def fetchDispatchId(self) -> int:
         returnId = 0
         try:
             f=open(resultsFile, "r")
@@ -31,7 +31,7 @@ class settings:
             return eval(f.read())
         f.close()
 
-    def getUrl(self, date=None, dis=None):
+    def getUrl(self, date=None, dis=None) -> str:
         dateStr = "date=%s&" % (date) if date else ""
         disStr = "dis=%s" % (dis) if dis else ""
         return IC_ROOT_URL + dateStr + disStr
