@@ -8,8 +8,9 @@ blotFetcher = fetch()
 settings = settings()
 tweet = tweet()
 
-blockedTweets = ["created from mobile", "cfs"]
-eventBlock = ["event", "evnt", "ref amb", "req cert"]
+BLOCKED_TWEETS = ["created from mobile", "cfs"]
+EVENT_BLOCK = ["event", "evnt", "ref amb", "req cert"]
+MIN_MESSAGE_LEN = 15
 
 class tweetLogic:
     def __init__(self):
@@ -17,9 +18,9 @@ class tweetLogic:
 
     def isTweetable(self, message):
         message = message.lower()
-        hasBlockedTweets = [i for i, s in enumerate(blockedTweets) if s in message]
-        hasEventTweets = [i for i, s in enumerate(eventBlock) if message.startswith(s)]
-        return len(message) > 15 and not hasBlockedTweets and not hasEventTweets
+        hasBlockedTweets = [i for i, s in enumerate(BLOCKED_TWEETS) if s in message]
+        hasEventTweets = [i for i, s in enumerate(EVENT_BLOCK) if message.startswith(s)]
+        return len(message) >= MIN_MESSAGE_LEN and not hasBlockedTweets and not hasEventTweets
 
     def updateIds(self):
         if len(self.dispatchIds) == 0:

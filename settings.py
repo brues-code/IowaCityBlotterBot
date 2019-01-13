@@ -32,12 +32,9 @@ class settings:
         f.close()
 
     def getUrl(self, date=None, dis=None):
-        url = IC_ROOT_URL
-        if date:
-            url = "%sdate=%s&" % (url, date)
-        if dis:
-            url = "%sdis=%s" % (url, dis)
-        return url
+        dateStr = "date=%s&" % (date) if date else ""
+        disStr = "dis=%s" % (dis) if dis else ""
+        return IC_ROOT_URL + dateStr + disStr
 
     def printWithStamp(self, inputStr):
         st = datetime.now().strftime('%H:%M:%S')
