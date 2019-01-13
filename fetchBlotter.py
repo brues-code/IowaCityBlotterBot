@@ -5,12 +5,12 @@ from settings import settings
 
 settings = settings()
 
-blockedCategories = ["MVA/PROPERTY DAMAGE ACCIDENT", "911 HANGUP", "SUICIDE/LAW", "TR/PARKING"]
-zBlock = ["Z"]
+blockedCategories:list = ["MVA/PROPERTY DAMAGE ACCIDENT", "911 HANGUP", "SUICIDE/LAW", "TR/PARKING"]
+zBlock:list = ["Z"]
 
 def fetchSoup(url):
     settings.printWithStamp("Fetching " + url)
-    text = build_opener().open(url).read().decode('utf-8')
+    text:str = build_opener().open(url).read().decode('utf-8')
     return BeautifulSoup( text, features='html.parser' )
 
 class fetch:

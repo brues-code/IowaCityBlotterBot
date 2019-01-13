@@ -42,7 +42,7 @@ class tweetLogic:
                     logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
                     result = TweetResult.SENT
                 except TweepError as e:
-                    logMsg:str = "Twitter error #%s: '%s'" % (idToTweet, str(e))
+                    logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
                     if e.api_code != tweet.duplicateErrorCode:
                         result = TweetResult.ERROR
             else:
