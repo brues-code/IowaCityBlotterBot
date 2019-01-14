@@ -1,10 +1,11 @@
 import os
 from datetime import datetime, timedelta
 
-logDirectory = "logs/"
-resultsFile = "lastDispatch.txt"
-settingsFile = "settings.txt"
+LOG_DIRECTORY = "logs/"
+LAST_DISPATCH_FILE = "lastDispatch.txt"
+SETTINGS_FILE = "settings.txt"
 IC_ROOT_URL = 'https://www.iowa-city.org/icgov/apps/police/activityLog.asp?'
+DATE_STAMP_HOUR_DELAY = 5
 
 class settings:
     def __init__(self):
@@ -13,7 +14,7 @@ class settings:
     def fetchDispatchId(self) -> int:
         returnId = 0
         try:
-            f=open(resultsFile, "r")
+            f=open(LAST_DISPATCH_FILE, "r")
             if f.readable():
                 returnId = int(f.read())
             f.close()
@@ -22,13 +23,13 @@ class settings:
         return returnId
     
     def saveDispatchId(self, dispatchId:int):
-        f=open(resultsFile, "w")
+        f=open(LAST_DISPATCH_FILE, "w")
         if f.writable():
             f.write(str(dispatchId))
         f.close()
 
     def getSettings(self):
-        f=open(settingsFile, "r")
+        f=open(SETTINGS_FILE, "r")
         if f.readable():
             return eval(f.read())
         f.close()
@@ -47,12 +48,12 @@ class settings:
         print(outputStr)
 
     def addToLog(self, logMessage:str):
-        if not os.path.exists(logDirectory):
-            os.makedirs(logDirectory)
-        f=open("%s%s.txt" % (logDirectory, self.getDateStamp()), "a")
+        if not os.path.exists(LOG_DIRECTORY):
+            os.makedirs(LOG_DIRECTORY)
+        f=open("%s%s.txt" % (LOG_DIRECTORY, self.getDateStamp()), "a")
         if f.writable():
             f.write(logMessage + "\n")
         f.close()
 
     def getDateStamp(self) -> str:
-        return (datetime.now() - timedelta(hours = 6)).strftime('%m%d%Y')
+        return (datetime.now() - timedelta(hours = DATE_STAMP_HOUR_DELAY)).strftime('%m%d%Y')
