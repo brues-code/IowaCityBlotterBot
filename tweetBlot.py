@@ -11,4 +11,5 @@ class tweet:
         self.duplicateErrorCode: int = 187
 
     def sendStatus(self, status:str) -> tweepy.Status:
-        return self.api.update_status(status)
+        placeId = keys['PLACE_ID']
+        return self.api.update_status(status, place_id=placeId)

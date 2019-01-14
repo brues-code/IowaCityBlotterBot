@@ -3,5 +3,6 @@
     'CONSUMER_SECRET': '',
     'ACCESS': '',
     'ACCESS_SECRET': '',
-    'DISCORD_TOKEN': ''
+    'DISCORD_TOKEN': '',
+    'PLACE_ID': ''
 }
