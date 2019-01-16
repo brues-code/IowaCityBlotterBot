@@ -9,7 +9,7 @@ settings = settings()
 tweet = tweet()
 
 BLOCKED_TWEETS:list = ["created from mobile", "cfs"]
-EVENT_BLOCK:list = ["event", "evnt", "ref amb", "req cert"]
+EVENT_BLOCK:list = ["event", "evnt", "ref amb", "req cert", "front desk relief"]
 MIN_MESSAGE_LEN:int = 15
 
 class tweetLogic:
