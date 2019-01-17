@@ -4,13 +4,20 @@ from settings import settings
 
 settings = settings()
 
-blockedCategories:list = ["MVA/PROPERTY DAMAGE ACCIDENT", "911 HANGUP", "SUICIDE/LAW", "TR/PARKING"]
+blockedCategories:list = ["MVA/PROPERTY DAMAGE ACCIDENT", "911 HANGUP", "SUICIDE/LAW", "TR/PARKING", "ESCORT/RELAY", "ALARM/PANIC/HOLDUP"]
 zBlock:list = ["Z"]
+blockedDispositions:list = ["EMPL ERROR ALARM"]
 
 def fetchSoup(url):
     settings.printWithStamp("Fetching " + url)
     text:str = build_opener().open(url).read().decode('utf-8')
     return BeautifulSoup( text, features='html.parser' )
+
+def isTweetable(activityCat, activityDisposition):
+    isBlockedCat = [i for i, s in enumerate(blockedCategories) if s in activityCat]
+    isZCat = [i for i, s in enumerate(zBlock) if activityCat.startswith(s)]
+    isBlockedDisp = [i for i, s in enumerate(blockedDispositions) if s in activityDisposition]
+    return not isBlockedCat and not isZCat and not isBlockedDisp
 
 class fetch:
     def __init__(self):
@@ -27,14 +34,13 @@ class fetch:
             if hasNote and hasNote != -1:
                 dispatchId = int(tRow.find('a').text)
                 if dispatchId > lastDispatchId:
-                    activityCat = str(tRow.find_all('td')[2].text).strip()
-                    isBlockedCat = [i for i, s in enumerate(blockedCategories) if s in activityCat]
-                    isZCat = [i for i, s in enumerate(zBlock) if activityCat.startswith(s)]
-                    if not isBlockedCat and not isZCat:
+                    tds = tRow.find_all('td')
+                    activityCat = str(tds[2].text).strip()
+                    activityDisposition = str(tds[3].text).strip()
+                    if isTweetable(activityCat, activityDisposition):
                         returnArray.append(dispatchId)
         returnArray.sort()
         return returnArray
-        
 
     def fetchDispatchDetails(self, id:int) -> str:
         url = settings.getUrl(dis=id)

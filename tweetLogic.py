@@ -13,18 +13,18 @@ BLOCKED_TWEETS:list = ["created from mobile", "cfs"]
 EVENT_BLOCK:list = ["event", "evnt", "ref amb", "req cert", "front desk relief"]
 MIN_MESSAGE_LEN:int = 15
 
+def isTweetable(message:str) -> bool:
+    message = message.lower()
+    hasBlockedTweets = [i for i, s in enumerate(BLOCKED_TWEETS) if s in message]
+    hasEventTweets = [i for i, s in enumerate(EVENT_BLOCK) if message.startswith(s)]
+    return len(message) >= MIN_MESSAGE_LEN and not hasBlockedTweets and not hasEventTweets
+
+def formatTweet(message:str, idToTweet:int) -> str:
+    return "%s\n%s" % (re.sub(r'\s\s+', '\n', message), settings.getUrl(dis=idToTweet))
+
 class tweetLogic:
     def __init__(self):
         self.dispatchIds:list = []
-
-    def isTweetable(self, message:str) -> bool:
-        message = message.lower()
-        hasBlockedTweets = [i for i, s in enumerate(BLOCKED_TWEETS) if s in message]
-        hasEventTweets = [i for i, s in enumerate(EVENT_BLOCK) if message.startswith(s)]
-        return len(message) >= MIN_MESSAGE_LEN and not hasBlockedTweets and not hasEventTweets
-
-    def formatTweet(self, message:str, idToTweet:int) -> str:
-        return "%s\n%s" % (re.sub(r'\s\s+', '\n', message), settings.getUrl(dis=idToTweet))
 
     def updateIds(self):
         if len(self.dispatchIds) == 0:
@@ -38,9 +38,9 @@ class tweetLogic:
             result = TweetResult.IGNORED
             idToTweet:int = self.dispatchIds.pop(0)
             dispatchMsg:str = blotFetcher.fetchDispatchDetails(idToTweet)
-            if self.isTweetable(dispatchMsg):
+            if isTweetable(dispatchMsg):
                 try:
-                    tweetMsg:str = self.formatTweet(dispatchMsg, idToTweet)
+                    tweetMsg:str = formatTweet(dispatchMsg, idToTweet)
                     newTweet = tweet.sendStatus(tweetMsg)
                     newTweetUrl:str = "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)
                     logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
