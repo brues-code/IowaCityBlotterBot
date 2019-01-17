@@ -1,3 +1,4 @@
+import re
 from tweepy import TweepError
 from fetchBlotter import fetch
 from settings import settings
@@ -22,6 +23,9 @@ class tweetLogic:
         hasEventTweets = [i for i, s in enumerate(EVENT_BLOCK) if message.startswith(s)]
         return len(message) >= MIN_MESSAGE_LEN and not hasBlockedTweets and not hasEventTweets
 
+    def formatTweet(self, message:str, idToTweet:int) -> str:
+        return "%s\n%s" % (re.sub(r'\s\s+', '\n', message), settings.getUrl(dis=idToTweet))
+
     def updateIds(self):
         if len(self.dispatchIds) == 0:
             self.dispatchIds = blotFetcher.fetchDispatchIds()
@@ -36,7 +40,7 @@ class tweetLogic:
             dispatchMsg:str = blotFetcher.fetchDispatchDetails(idToTweet)
             if self.isTweetable(dispatchMsg):
                 try:
-                    tweetMsg:str = "%s\n%s" % (dispatchMsg, settings.getUrl(dis=idToTweet))
+                    tweetMsg:str = self.formatTweet(dispatchMsg, idToTweet)
                     newTweet = tweet.sendStatus(tweetMsg)
                     newTweetUrl:str = "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)
                     logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
