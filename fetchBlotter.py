@@ -9,9 +9,13 @@ zBlock:list = ["Z"]
 blockedDispositions:list = ["EMPL ERROR ALARM"]
 
 def fetchSoup(url):
-    settings.printWithStamp("Fetching " + url)
-    text:str = build_opener().open(url).read().decode('utf-8')
-    return BeautifulSoup( text, features='html.parser' )
+    while True:
+        try:
+            settings.printWithStamp("Fetching " + url)
+            text = build_opener().open(url).read().decode('utf-8')
+            return BeautifulSoup( text, features='html.parser' )
+        except:
+            pass
 
 def isTweetable(activityCat, activityDisposition):
     isBlockedCat = [i for i, s in enumerate(blockedCategories) if s in activityCat]
@@ -44,8 +48,4 @@ class fetch:
 
     def fetchDispatchDetails(self, id:int) -> str:
         url = settings.getUrl(dis=id)
-        while True:
-            try:
-                return fetchSoup(url).find_all('td').pop().text
-            except:
-                pass
+        return fetchSoup(url).find_all('td').pop().text
