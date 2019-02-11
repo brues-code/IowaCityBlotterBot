@@ -4,7 +4,15 @@ from settings import settings
 
 settings = settings()
 
-blockedCategories:list = ["MVA/PROPERTY DAMAGE ACCIDENT", "911 HANGUP", "SUICIDE/LAW", "TR/PARKING", "ESCORT/RELAY", "ALARM/PANIC/HOLDUP"]
+blockedCategories:list = [
+    "MVA/PROPERTY DAMAGE ACCIDENT",
+    "911 HANGUP",
+    "SUICIDE/LAW",
+    "TR/PARKING",
+    "ESCORT/RELAY",
+    "ALARM/PANIC/HOLDUP",
+    "MENTAL IMPAIRMENT"
+]
 zBlock:list = ["Z"]
 blockedDispositions:list = ["EMPL ERROR ALARM"]
 
