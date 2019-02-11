@@ -20,7 +20,13 @@ def isTweetable(message:str) -> bool:
     return len(message) >= MIN_MESSAGE_LEN and not hasBlockedTweets and not hasEventTweets
 
 def formatTweet(message:str, idToTweet:int) -> str:
-    return "%s\n%s" % (re.sub(r'\s\s+', '\n', message), settings.getUrl(dis=idToTweet))
+    msg = re.sub(r'\s\s+', '\n', message)
+    url = settings.getUrl(dis=idToTweet)
+    tweetMsg = "%s\n%s" % (msg, url)
+    if len(tweetMsg) > 240:
+        truncId = "#%s" % (idToTweet)
+        tweetMsg = "%s\n%s" % (msg, truncId)
+    return tweetMsg
 
 class tweetLogic:
     def __init__(self):
