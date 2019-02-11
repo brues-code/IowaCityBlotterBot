@@ -24,8 +24,8 @@ def formatTweet(message:str, idToTweet:int) -> str:
     url = settings.getUrl(dis=idToTweet)
     tweetMsg = "%s\n%s" % (msg, url)
     if len(tweetMsg) > 240:
-        truncId = "#%s" % (idToTweet)
-        tweetMsg = "%s\n%s" % (msg, truncId)
+        truncId = " #%s" % (idToTweet)
+        tweetMsg = "%s%s" % (msg, truncId)
     return tweetMsg
 
 class tweetLogic:
