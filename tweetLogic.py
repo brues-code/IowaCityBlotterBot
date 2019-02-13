@@ -9,7 +9,7 @@ blotFetcher = fetch()
 settings = settings()
 tweet = tweet()
 
-BLOCKED_TWEETS:list = ["created from mobile", "cfs"]
+BLOCKED_TWEETS:list = ["created from mobile", "cfs", "mileage report:"]
 EVENT_BLOCK:list = ["event", "evnt", "ref amb", "req cert", "front desk relief"]
 MIN_MESSAGE_LEN:int = 15
 
