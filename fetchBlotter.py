@@ -4,7 +4,7 @@ from settings import settings
 
 settings = settings()
 
-blockedCategories:list = [
+blockedCategories: list = [
     "MVA/PROPERTY DAMAGE ACCIDENT",
     "911 HANGUP",
     "SUICIDE/LAW",
@@ -13,23 +13,28 @@ blockedCategories:list = [
     "ALARM/PANIC/HOLDUP",
     "MENTAL IMPAIRMENT"
 ]
-zBlock:list = ["Z"]
-blockedDispositions:list = ["EMPL ERROR ALARM"]
+zBlock: list = ["Z"]
+blockedDispositions: list = ["EMPL ERROR ALARM"]
+
 
 def fetchSoup(url):
     while True:
         try:
             settings.printWithStamp("Fetching " + url)
             text = build_opener().open(url).read().decode('utf-8')
-            return BeautifulSoup( text, features='html.parser' )
+            return BeautifulSoup(text, features='html.parser')
         except:
             pass
 
+
 def isTweetable(activityCat, activityDisposition):
-    isBlockedCat = [i for i, s in enumerate(blockedCategories) if s in activityCat]
+    isBlockedCat = [i for i, s in enumerate(
+        blockedCategories) if s in activityCat]
     isZCat = [i for i, s in enumerate(zBlock) if activityCat.startswith(s)]
-    isBlockedDisp = [i for i, s in enumerate(blockedDispositions) if s in activityDisposition]
+    isBlockedDisp = [i for i, s in enumerate(
+        blockedDispositions) if s in activityDisposition]
     return not isBlockedCat and not isZCat and not isBlockedDisp
+
 
 class fetch:
     def __init__(self):
@@ -40,7 +45,7 @@ class fetch:
         lastDispatchId = settings.fetchDispatchId()
         dateStamp = settings.getDateStamp()
         url = settings.getUrl(dateStamp)
-        dispatchTable = fetchSoup(url).find('tbody', {"valign" : "top"})
+        dispatchTable = fetchSoup(url).find('tbody', {"valign": "top"})
         for tRow in dispatchTable:
             hasNote = tRow.find('strong')
             if hasNote and hasNote != -1:
@@ -54,6 +59,6 @@ class fetch:
         returnArray.sort()
         return returnArray
 
-    def fetchDispatchDetails(self, id:int) -> str:
+    def fetchDispatchDetails(self, id: int) -> str:
         url = settings.getUrl(dis=id)
         return fetchSoup(url).find_all('td').pop().text
