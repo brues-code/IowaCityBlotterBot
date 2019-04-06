@@ -1,9 +1,9 @@
 import re
 from tweepy import TweepError
+from enums import TweetResult
 from fetchBlotter import fetch
 from settings import settings
 from tweetBlot import tweet
-from tweetResult import TweetResult
 
 blotFetcher = fetch()
 settings = settings()
@@ -60,8 +60,7 @@ class tweetLogic:
                     result = TweetResult.SENT
                 except TweepError as e:
                     logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
-                    if e.api_code != tweet.duplicateErrorCode:
-                        result = TweetResult.ERROR
+                    result = TweetResult.ERROR
             else:
                 logMsg = "Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg)
             if result != TweetResult.ERROR:
