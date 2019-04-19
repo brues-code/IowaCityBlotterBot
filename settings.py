@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 LOG_DIRECTORY = "logs/"
 LAST_DISPATCH_FILE = "lastDispatch.txt"
 SETTINGS_FILE = "settings.txt"
-IC_ROOT_URL = 'http://www.iowa-city.org/IcgovApps/police/'
+IC_ROOT_URL = 'https://www.iowa-city.org/IcgovApps/police/'
 DATE_STAMP_HOUR_DELAY = 5
 
 
