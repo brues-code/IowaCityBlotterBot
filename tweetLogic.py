@@ -12,7 +12,7 @@ tweet = tweet()
 BLOCKED_TWEETS: list = ["created from mobile", "cfs", "mileage report:"]
 EVENT_BLOCK: list = ["event", "evnt", "ref amb",
                      "req cert", "front desk relief", "type of call changed"]
-MIN_MESSAGE_LEN = 15
+MIN_MESSAGE_LEN = 10
 MAX_TWEET_LEN = 240
 
 
