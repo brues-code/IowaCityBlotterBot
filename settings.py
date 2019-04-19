@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 LOG_DIRECTORY = "logs/"
 LAST_DISPATCH_FILE = "lastDispatch.txt"
 SETTINGS_FILE = "settings.txt"
-IC_ROOT_URL = 'https://www.iowa-city.org/IcgovApps/police/'
+IC_ROOT_URL = 'https://www.iowa-city.org/icgovapps/police/'
 DATE_STAMP_HOUR_DELAY = 5
 
 
@@ -36,10 +36,10 @@ class settings:
         f.close()
 
     def getListUrl(self, date: str) -> str:
-        return "%sActivityLog?activityDate=%s" % (IC_ROOT_URL, date)
+        return "%sactivitylog?activityDate=%s" % (IC_ROOT_URL, date)
 
     def getDispatchUrl(self, dispatchId: str) -> str:
-        return "%sDetails?dispatchNumber=%s" % (IC_ROOT_URL, dispatchId)
+        return "%sdetails?dispatchNumber=%s" % (IC_ROOT_URL, dispatchId)
 
     def printWithStamp(self, inputStr: str):
         st: str = datetime.now().strftime('%H:%M:%S')
