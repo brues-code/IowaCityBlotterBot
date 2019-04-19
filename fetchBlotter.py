@@ -44,12 +44,12 @@ class fetch:
         returnArray = []
         lastDispatchId = settings.fetchDispatchId()
         dateStamp = settings.getDateStamp()
-        url = settings.getUrl(dateStamp)
-        dispatchTable = fetchSoup(url).find('tbody', {"valign": "top"})
+        url = settings.getListUrl(dateStamp)
+        dispatchTable = fetchSoup(url).find('tbody')
         for tRow in dispatchTable:
-            hasNote = tRow.find('strong')
-            if hasNote and hasNote != -1:
-                dispatchId = int(tRow.find('a').text)
+            dispatchId = tRow.find('a')
+            if(dispatchId != -1):
+                dispatchId = int(dispatchId.text)
                 if dispatchId > lastDispatchId:
                     tds = tRow.find_all('td')
                     activityCat = str(tds[2].text).strip()
@@ -60,5 +60,5 @@ class fetch:
         return returnArray
 
     def fetchDispatchDetails(self, id: int) -> str:
-        url = settings.getUrl(dis=id)
-        return fetchSoup(url).find_all('td').pop().text
+        url = settings.getDispatchUrl(id)
+        return fetchSoup(url).find_all('dd').pop().text

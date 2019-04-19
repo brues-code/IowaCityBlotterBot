@@ -25,8 +25,8 @@ def isTweetable(message: str) -> bool:
 
 
 def formatTweet(message: str, idToTweet: int) -> str:
-    msg = re.sub(r'\s\s+', '\n', message)
-    url = settings.getUrl(dis=idToTweet)
+    msg = re.sub(r'\s\s+', '\n', message.strip())
+    url = settings.getDispatchUrl(idToTweet)
     tweetMsg = "%s\n%s" % (msg, url)
     if len(tweetMsg) > 240:
         tweetMsg = "%s #%s" % (msg, idToTweet)
