@@ -11,7 +11,9 @@ blockedCategories: list = [
     "TR/PARKING",
     "ESCORT/RELAY",
     "ALARM/PANIC/HOLDUP",
-    "MENTAL IMPAIRMENT"
+    "MENTAL IMPAIRMENT",
+    "TRAFFIC STOP",
+    "MISSING/JUVENILE"
 ]
 zBlock: list = ["Z"]
 blockedDispositions: list = ["EMPL ERROR ALARM"]
