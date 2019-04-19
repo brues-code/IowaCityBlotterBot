@@ -62,7 +62,7 @@ class tweetLogic:
                     logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
                     result = TweetResult.ERROR
             else:
-                logMsg = "Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg)
+                logMsg = "Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg.strip())
             if result != TweetResult.ERROR:
                 settings.saveDispatchId(idToTweet)
         settings.printWithStamp(logMsg)
