@@ -30,6 +30,8 @@ def formatTweet(message: str, idToTweet: int) -> str:
     url = settings.getDispatchUrl(idToTweet)
     tweetMsg = "%s\n%s" % (msg, url)
     if len(tweetMsg) > MAX_TWEET_LEN:
+        newMsgLen = MAX_TWEET_LEN - (4 + len(str(idToTweet)))
+        msg = (msg[:newMsgLen] + '..') if len(msg) > newMsgLen else msg
         tweetMsg = "%s #%s" % (msg, idToTweet)
     return tweetMsg
 
