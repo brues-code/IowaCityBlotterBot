@@ -13,10 +13,11 @@ blockedCategories: list = [
     "ALARM/PANIC/HOLDUP",
     "MENTAL IMPAIRMENT",
     "TRAFFIC STOP",
-    "MISSING/JUVENILE"
+    "MISSING/JUVENILE",
+    "WELFARE CHECK"
 ]
 zBlock: list = ["Z"]
-blockedDispositions: list = ["EMPL ERROR ALARM"]
+blockedDispositions: list = ["EMPL ERROR ALARM", "UNK CAUSE ALARM"]
 
 
 def fetchSoup(url):

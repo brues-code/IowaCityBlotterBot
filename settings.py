@@ -42,8 +42,8 @@ class settings:
         return "%sdetails?dispatchNumber=%s" % (IC_ROOT_URL, dispatchId)
 
     def printWithStamp(self, inputStr: str):
-        st: str = datetime.now().strftime('%H:%M:%S')
-        outputStr: str = "[%s]: %s" % (st, inputStr)
+        st = datetime.now().strftime('%H:%M:%S')
+        outputStr = "[%s]: %s" % (st, inputStr)
         self.addToLog(outputStr)
         print(outputStr)
 

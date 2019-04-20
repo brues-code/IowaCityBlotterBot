@@ -9,8 +9,8 @@ blotFetcher = fetch()
 settings = settings()
 tweet = tweet()
 
-BLOCKED_TWEETS: list = ["created from mobile", "cfs", "mileage report:"]
-EVENT_BLOCK: list = ["event", "evnt", "ref amb",
+BLOCKED_TWEETS = ["created from mobile", "cfs", "mileage report:"]
+EVENT_BLOCK = ["event", "evnt", "ref amb",
                      "req cert", "front desk relief", "type of call changed"]
 MIN_MESSAGE_LEN = 10
 MAX_TWEET_LEN = 240
@@ -38,7 +38,7 @@ def formatTweet(message: str, idToTweet: int) -> str:
 
 class tweetLogic:
     def __init__(self):
-        self.dispatchIds: list = []
+        self.dispatchIds = []
 
     def updateIds(self):
         if len(self.dispatchIds) == 0:
@@ -48,16 +48,16 @@ class tweetLogic:
 
     def tweetStatus(self) -> TweetResult:
         result: TweetResult = TweetResult.NOTWEETS
-        logMsg: str = "Nothing to tweet..."
+        logMsg = "Nothing to tweet..."
         if len(self.dispatchIds) > 0:
             result = TweetResult.IGNORED
-            idToTweet: int = self.dispatchIds.pop(0)
-            dispatchMsg: str = blotFetcher.fetchDispatchDetails(idToTweet)
+            idToTweet = self.dispatchIds.pop(0)
+            dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
             if isTweetable(dispatchMsg):
                 try:
-                    tweetMsg: str = formatTweet(dispatchMsg, idToTweet)
+                    tweetMsg = formatTweet(dispatchMsg, idToTweet)
                     newTweet = tweet.sendStatus(tweetMsg)
-                    newTweetUrl: str = "https://twitter.com/%s/status/%s" % (
+                    newTweetUrl = "https://twitter.com/%s/status/%s" % (
                         newTweet.user.screen_name, newTweet.id_str)
                     logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
                     result = TweetResult.SENT
