@@ -19,7 +19,6 @@ class settings:
     def fetchOldDispatchIds(self) -> list:
         returnIds = []
         dispatchFileName = self.getDispatchFileName()
-        self.deleteOldDispatchIds()
         try:
             if not os.path.exists(CACHE_DIRECTORY):
                 os.makedirs(CACHE_DIRECTORY)
@@ -31,6 +30,7 @@ class settings:
             f.close()
         except:
             pass
+        self.deleteOldDispatchIds()
         return returnIds
 
     def saveDispatchId(self, dispatchId: str):
