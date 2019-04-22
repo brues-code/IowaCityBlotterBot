@@ -57,7 +57,8 @@ class fetch:
                     tds = tRow.find_all('td')
                     activityCat = str(tds[2].text).strip()
                     activityDisposition = str(tds[3].text).strip()
-                    if isTweetable(activityCat, activityDisposition):
+                    hasDetails = tds.pop().text
+                    if hasDetails == 'Y' and isTweetable(activityCat, activityDisposition):
                         returnArray.append(dispatchId)
         returnArray.sort()
         return returnArray
