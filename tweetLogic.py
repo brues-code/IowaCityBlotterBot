@@ -67,7 +67,7 @@ class tweetLogic:
             else:
                 logMsg = "Didn't tweet #%s: '%s'" % (
                     idToTweet, dispatchMsg.strip())
-        settings.saveDispatchId(idToTweet)
+            settings.saveDispatchId(idToTweet)
         settings.printWithStamp(logMsg)
         return result
 
