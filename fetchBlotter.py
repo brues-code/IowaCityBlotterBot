@@ -45,15 +45,15 @@ class fetch:
 
     def fetchDispatchIds(self) -> list:
         returnArray = []
-        lastDispatchId = settings.fetchDispatchId()
+        oldDispatchIds = settings.fetchOldDispatchIds()
         dateStamp = settings.getDateStamp()
         url = settings.getListUrl(dateStamp)
         dispatchTable = fetchSoup(url).find('tbody')
         for tRow in dispatchTable:
-            dispatchId = tRow.find('a')
-            if(dispatchId != -1):
-                dispatchId = int(dispatchId.text)
-                if dispatchId > lastDispatchId:
+            dispatchIdLink = tRow.find('a')
+            if(dispatchIdLink != -1):
+                dispatchId = dispatchIdLink.text
+                if dispatchId not in oldDispatchIds:
                     tds = tRow.find_all('td')
                     activityCat = str(tds[2].text).strip()
                     activityDisposition = str(tds[3].text).strip()
@@ -62,6 +62,6 @@ class fetch:
         returnArray.sort()
         return returnArray
 
-    def fetchDispatchDetails(self, id: int) -> str:
+    def fetchDispatchDetails(self, id: str) -> str:
         url = settings.getDispatchUrl(id)
         return fetchSoup(url).find_all('dd').pop().text

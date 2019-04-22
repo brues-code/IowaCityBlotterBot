@@ -1,8 +1,9 @@
 import os
+import time
 from datetime import datetime, timedelta
 
 LOG_DIRECTORY = "logs/"
-LAST_DISPATCH_FILE = "lastDispatch.txt"
+CACHE_DIRECTORY = "cache/"
 SETTINGS_FILE = "settings.txt"
 IC_ROOT_URL = 'https://www.iowa-city.org/icgovapps/police/'
 DATE_STAMP_HOUR_DELAY = 5
@@ -12,22 +13,40 @@ class settings:
     def __init__(self):
         pass
 
-    def fetchDispatchId(self) -> int:
-        returnId = 0
+    def getDispatchFileName(self) -> str:
+        return "%s/%s.txt" % (CACHE_DIRECTORY, self.getDateStamp())
+
+    def fetchOldDispatchIds(self) -> list:
+        returnIds = []
+        dispatchFileName = self.getDispatchFileName()
+        self.deleteOldDispatchIds()
         try:
-            f = open(LAST_DISPATCH_FILE, "r")
+            if not os.path.exists(CACHE_DIRECTORY):
+                os.makedirs(CACHE_DIRECTORY)
+            f = open(dispatchFileName, "r")
             if f.readable():
-                returnId = int(f.read())
+                text: str = f.read()
+                if(len(text) > 0):
+                    returnIds = text.split(',')
             f.close()
         except:
             pass
-        return returnId
+        return returnIds
 
-    def saveDispatchId(self, dispatchId: int):
-        f = open(LAST_DISPATCH_FILE, "w")
+    def saveDispatchId(self, dispatchId: str):
+        f = open(self.getDispatchFileName(), "a")
         if f.writable():
-            f.write(str(dispatchId))
+            f.write("%s," % (dispatchId))
         f.close()
+
+    def deleteOldDispatchIds(self):
+        current_time = time.time()
+        for f in os.listdir(CACHE_DIRECTORY):
+            fileName = "%s%s" % (CACHE_DIRECTORY, f)
+            creation_time = os.path.getctime(fileName)
+            if (current_time - creation_time) // (24 * 3600) >= 2:
+                os.unlink(fileName)
+                print('{} removed'.format(fileName))
 
     def getSettings(self):
         f = open(SETTINGS_FILE, "r")
@@ -63,7 +82,7 @@ class settings:
         return (datetime.now() - timedelta(hours=DATE_STAMP_HOUR_DELAY))
 
     def getDateStamp(self) -> str:
-        return self.getDate().strftime('%m/%d/%Y')
+        return self.getDate().strftime('%m-%d-%Y')
 
     def getLogDirectory(self) -> str:
         date = self.getDate()

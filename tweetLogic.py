@@ -11,7 +11,7 @@ tweet = tweet()
 
 BLOCKED_TWEETS = ["created from mobile", "cfs", "mileage report:"]
 EVENT_BLOCK = ["event", "evnt", "ref amb",
-                     "req cert", "front desk relief", "type of call changed"]
+               "req cert", "front desk relief", "type of call changed"]
 MIN_MESSAGE_LEN = 10
 MAX_TWEET_LEN = 240
 
@@ -25,7 +25,7 @@ def isTweetable(message: str) -> bool:
     return len(message) >= MIN_MESSAGE_LEN and not hasBlockedTweets and not hasEventTweets
 
 
-def formatTweet(message: str, idToTweet: int) -> str:
+def formatTweet(message: str, idToTweet: str) -> str:
     msg = re.sub(r'\s\s+', '\n', message.strip())
     url = settings.getDispatchUrl(idToTweet)
     tweetMsg = "%s\n%s" % (msg, url)
@@ -65,9 +65,9 @@ class tweetLogic:
                     logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
                     result = TweetResult.ERROR
             else:
-                logMsg = "Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg.strip())
-            if result != TweetResult.ERROR:
-                settings.saveDispatchId(idToTweet)
+                logMsg = "Didn't tweet #%s: '%s'" % (
+                    idToTweet, dispatchMsg.strip())
+        settings.saveDispatchId(idToTweet)
         settings.printWithStamp(logMsg)
         return result
 

@@ -122,6 +122,9 @@ results/
 # Logs
 logs/
 
+# Cache
+cache/
+
 #ICBlotBot Settings
 lastDispatch.txt
 settings.txt
