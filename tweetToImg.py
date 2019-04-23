@@ -10,7 +10,8 @@ CSS_FILE = 'blotstyle.css'
 IMAGE_OPTIONS = {
     'format': 'png',
     'crop-w': '470',
-    'quiet': ''
+    'quiet': '',
+    'xvfb': ''
 }
 
 class tweetToImg:
