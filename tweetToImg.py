@@ -10,9 +10,10 @@ CSS_FILE = 'blotstyle.css'
 IMAGE_OPTIONS = {
     'format': 'png',
     'crop-w': '470',
-    'quiet': '',
-    'xvfb': ''
+    'quiet': ''
 }
+if os.name == 'posix':
+    IMAGE_OPTIONS['xvfb'] = ''
 
 class tweetToImg:
     def __init__(self):
