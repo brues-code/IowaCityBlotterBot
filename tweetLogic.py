@@ -13,7 +13,7 @@ tweetToImg = tweetToImg()
 
 BLOCKED_TWEETS = ["created from mobile", "cfs", "mileage report:"]
 EVENT_BLOCK = ["event", "evnt", "ref amb",
-               "req cert", "front desk relief", "type of call changed"]
+               "req cert", "front desk relief", "type of call changed", "scheduled for:"]
 MIN_MESSAGE_LEN = 10
 MAX_TWEET_LEN = 240
 
