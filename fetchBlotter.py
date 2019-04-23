@@ -65,4 +65,5 @@ class fetch:
 
     def fetchDispatchDetails(self, id: str) -> str:
         url = settings.getDispatchUrl(id)
-        return fetchSoup(url).find_all('dd').pop().text
+        return fetchSoup(url).find('dl')
+        # return fetchSoup(url).find_all('dd').pop().text

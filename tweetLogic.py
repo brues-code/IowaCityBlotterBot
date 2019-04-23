@@ -4,10 +4,12 @@ from enums import TweetResult
 from fetchBlotter import fetch
 from settings import settings
 from tweetBlot import tweet
+from tweetToImg import tweetToImg
 
 blotFetcher = fetch()
 settings = settings()
 tweet = tweet()
+tweetToImg = tweetToImg()
 
 BLOCKED_TWEETS = ["created from mobile", "cfs", "mileage report:"]
 EVENT_BLOCK = ["event", "evnt", "ref amb",
@@ -52,7 +54,8 @@ class tweetLogic:
         if len(self.dispatchIds) > 0:
             result = TweetResult.IGNORED
             idToTweet = self.dispatchIds.pop(0)
-            dispatchMsg = blotFetcher.fetchDispatchDetails(idToTweet)
+            dispatchSoup = blotFetcher.fetchDispatchDetails(idToTweet)
+            dispatchMsg = dispatchSoup.find_all('dd').pop().text
             if isTweetable(dispatchMsg):
                 try:
                     tweetMsg = formatTweet(dispatchMsg, idToTweet)
@@ -64,6 +67,8 @@ class tweetLogic:
                 except TweepError as e:
                     logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
                     result = TweetResult.ERROR
+                if result == TweetResult.SENT:
+                    tweetToImg.convertTweetToImage(idToTweet, dispatchSoup)
             else:
                 logMsg = "Didn't tweet #%s: '%s'" % (
                     idToTweet, dispatchMsg.strip())

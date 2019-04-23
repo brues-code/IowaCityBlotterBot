@@ -67,7 +67,7 @@ class settings:
         print(outputStr)
 
     def addToLog(self, logMessage: str):
-        logDirectory = self.getLogDirectory()
+        logDirectory = "%s%s" %  (LOG_DIRECTORY, self.getDateDirectory())
         if not os.path.exists(logDirectory):
             os.makedirs(logDirectory)
         today = self.getDate().day
@@ -84,9 +84,9 @@ class settings:
     def getDateStamp(self) -> str:
         return self.getDate().strftime('%m-%d-%Y')
 
-    def getLogDirectory(self) -> str:
+    def getDateDirectory(self) -> str:
         date = self.getDate()
         month = date.month
         if(month < 10):
             month = "0%s" % (month)
-        return '%s%s/%s/' % (LOG_DIRECTORY, date.year, month)
+        return '%s/%s/' % (date.year, month)
