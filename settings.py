@@ -70,10 +70,7 @@ class settings:
         logDirectory = "%s%s" %  (LOG_DIRECTORY, self.getDateDirectory())
         if not os.path.exists(logDirectory):
             os.makedirs(logDirectory)
-        today = self.getDate().day
-        if(today < 10):
-            today = "0%s" % (today)
-        f = open("%s%s.txt" % (logDirectory, today), "a")
+        f = open("%s%s.txt" % (logDirectory, self.getDateStamp()), "a")
         if f.writable():
             f.write(logMessage + "\n")
         f.close()
