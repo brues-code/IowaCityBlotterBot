@@ -19,13 +19,12 @@ blockedCategories: list = [
 zBlock: list = ["Z"]
 blockedDispositions: list = ["EMPL ERROR ALARM", "UNK CAUSE ALARM"]
 
-
 def fetchSoup(url):
     while True:
         try:
             settings.printWithStamp("Fetching " + url)
             text = build_opener().open(url).read().decode('utf-8')
-            return BeautifulSoup(text, features='html.parser')
+            return BeautifulSoup(text, 'html.parser')
         except:
             pass
 
