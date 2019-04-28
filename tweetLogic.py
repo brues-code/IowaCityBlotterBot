@@ -28,7 +28,7 @@ def isTweetable(message: str) -> bool:
 
 
 def formatTweet(message: str, idToTweet: str) -> str:
-    msg = re.sub(r'\s\s+', '\n', message.strip())
+    msg = re.sub(r'\s\s+', '\n', message)
     url = settings.getDispatchUrl(idToTweet)
     tweetMsg = "%s\n%s" % (msg, url)
     if len(tweetMsg) > MAX_TWEET_LEN:
@@ -55,7 +55,7 @@ class tweetLogic:
             result = TweetResult.IGNORED
             idToTweet = self.dispatchIds.pop(0)
             dispatchSoup = blotFetcher.fetchDispatchDetails(idToTweet)
-            dispatchMsg = dispatchSoup.find_all('dd').pop().text
+            dispatchMsg = dispatchSoup.find_all('dd').pop().text.strip()
             if isTweetable(dispatchMsg):
                 try:
                     tweetMsg = formatTweet(dispatchMsg, idToTweet)
@@ -67,11 +67,11 @@ class tweetLogic:
                 except TweepError as e:
                     logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
                     result = TweetResult.ERROR
-                if result == TweetResult.SENT:
-                    tweetToImg.convertTweetToImage(idToTweet, dispatchSoup)
+                # if result == TweetResult.SENT:
+                #     tweetToImg.convertTweetToImage(idToTweet, dispatchSoup)
             else:
                 logMsg = "Didn't tweet #%s: '%s'" % (
-                    idToTweet, dispatchMsg.strip())
+                    idToTweet, dispatchMsg)
             settings.saveDispatchId(idToTweet)
         settings.printWithStamp(logMsg)
         return result
