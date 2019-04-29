@@ -30,4 +30,4 @@ for yearFolder in os.listdir(rootDir):
                 date = logFile.split(".").pop(0)
                 newFileName = "%s%s-%s-%s.txt" % (srcDir, monthFolder, date, yearFolder)
                 print(newFileName)
-                #os.rename(src, newFileName)
+                os.rename(src, newFileName)
