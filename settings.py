@@ -46,7 +46,7 @@ class settings:
             creation_time = os.path.getctime(fileName)
             if (current_time - creation_time) // (24 * 3600) >= 2:
                 os.unlink(fileName)
-                print('{} removed'.format(fileName))
+                self.printWithStamp('{} removed'.format(fileName))
 
     def getSettings(self):
         f = open(SETTINGS_FILE, "r")
