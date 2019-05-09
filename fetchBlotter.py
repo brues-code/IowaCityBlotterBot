@@ -17,7 +17,7 @@ blockedCategories: list = [
     "WELFARE CHECK",
     "PAPER SERVICE/WARRANT"
 ]
-zBlock: list = ["Z"]
+zBlock: list = ["Z", "TEST"]
 blockedDispositions: list = ["EMPL ERROR ALARM", "UNK CAUSE ALARM"]
 
 def fetchSoup(url):
