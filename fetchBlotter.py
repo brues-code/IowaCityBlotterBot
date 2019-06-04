@@ -21,14 +21,13 @@ zBlock: list = ["Z", "TEST"]
 blockedDispositions: list = ["EMPL ERROR ALARM", "UNK CAUSE ALARM"]
 
 def fetchSoup(url):
-    while True:
-        try:
-            settings.printWithStamp("Fetching " + url)
-            text = build_opener().open(url).read().decode('utf-8')
-            return BeautifulSoup(text, 'html.parser')
-        except:
-            pass
-
+    text = ""
+    try:
+        settings.printWithStamp("Fetching " + url)
+        text = build_opener().open(url).read().decode('utf-8')
+    except:
+        pass
+    return BeautifulSoup(text, 'html.parser')
 
 def isTweetable(activityCat, activityDisposition):
     isBlockedCat = [i for i, s in enumerate(
@@ -49,17 +48,18 @@ class fetch:
         dateStamp = settings.getDateStamp()
         url = settings.getListUrl(dateStamp)
         dispatchTable = fetchSoup(url).find('tbody')
-        for tRow in dispatchTable:
-            dispatchIdLink = tRow.find('a')
-            if(dispatchIdLink != -1):
-                dispatchId = dispatchIdLink.text
-                if dispatchId not in oldDispatchIds:
-                    tds = tRow.find_all('td')
-                    activityCat = str(tds[2].text).strip()
-                    activityDisposition = str(tds[3].text).strip()
-                    hasDetails = tds.pop().text
-                    if hasDetails == 'Y' and isTweetable(activityCat, activityDisposition):
-                        returnArray.append(dispatchId)
+        if dispatchTable:
+            for tRow in dispatchTable:
+                dispatchIdLink = tRow.find('a')
+                if(dispatchIdLink != -1):
+                    dispatchId = dispatchIdLink.text
+                    if dispatchId not in oldDispatchIds:
+                        tds = tRow.find_all('td')
+                        activityCat = str(tds[2].text).strip()
+                        activityDisposition = str(tds[3].text).strip()
+                        hasDetails = tds.pop().text
+                        if hasDetails == 'Y' and isTweetable(activityCat, activityDisposition):
+                            returnArray.append(dispatchId)
         returnArray.sort()
         return returnArray
 
