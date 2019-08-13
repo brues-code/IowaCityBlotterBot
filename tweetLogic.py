@@ -4,12 +4,10 @@ from enums import TweetResult
 from fetchBlotter import fetch
 from settings import settings
 from tweetBlot import tweet
-from tweetToImg import tweetToImg
 
 blotFetcher = fetch()
 settings = settings()
 tweet = tweet()
-tweetToImg = tweetToImg()
 
 BLOCKED_TWEETS = ["created from mobile", "cfs", "mileage report:"]
 EVENT_BLOCK = ["event", "evnt", "ref amb",
@@ -29,8 +27,7 @@ def isTweetable(message: str) -> bool:
 
 def formatTweet(message: str, idToTweet: str) -> str:
     msg = re.sub(r'\s\s+', '\n', message)
-    url = settings.getDispatchUrl(idToTweet)
-    tweetMsg = "%s\n%s" % (msg, url)
+    tweetMsg = "%s\n#%s" % (msg, idToTweet)
     if len(tweetMsg) > MAX_TWEET_LEN:
         newMsgLen = MAX_TWEET_LEN - (4 + len(str(idToTweet)))
         msg = (msg[:newMsgLen] + '..') if len(msg) > newMsgLen else msg
@@ -53,26 +50,26 @@ class tweetLogic:
         logMsg = "Nothing to tweet..."
         if len(self.dispatchIds) > 0:
             result = TweetResult.IGNORED
-            idToTweet = self.dispatchIds.pop(0)
+            idToTweet = self.dispatchIds[0]
             dispatchSoup = blotFetcher.fetchDispatchDetails(idToTweet)
-            dispatchMsg = dispatchSoup.find_all('dd').pop().text.strip()
-            if isTweetable(dispatchMsg):
-                try:
-                    tweetMsg = formatTweet(dispatchMsg, idToTweet)
-                    newTweet = tweet.sendStatus(tweetMsg)
-                    newTweetUrl = "https://twitter.com/%s/status/%s" % (
-                        newTweet.user.screen_name, newTweet.id_str)
-                    logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
-                    result = TweetResult.SENT
-                except TweepError as e:
-                    logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
-                    result = TweetResult.ERROR
-                # if result == TweetResult.SENT:
-                #     tweetToImg.convertTweetToImage(idToTweet, dispatchSoup)
-            else:
-                logMsg = "Didn't tweet #%s: '%s'" % (
-                    idToTweet, dispatchMsg)
-            settings.saveDispatchId(idToTweet)
+            if dispatchSoup:
+                dispatchMsg = dispatchSoup.find_all('dd').pop().text.strip()
+                if isTweetable(dispatchMsg):
+                    try:
+                        tweetMsg = formatTweet(dispatchMsg, idToTweet)
+                        newTweet = tweet.sendStatus(tweetMsg)
+                        newTweetUrl = "https://twitter.com/%s/status/%s" % (
+                            newTweet.user.screen_name, newTweet.id_str)
+                        logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
+                        result = TweetResult.SENT
+                    except TweepError as e:
+                        logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
+                        result = TweetResult.ERROR
+                else:
+                    logMsg = "Didn't tweet #%s: '%s'" % (
+                        idToTweet, dispatchMsg)
+                self.dispatchIds.pop(0)
+                settings.saveDispatchId(idToTweet)
         settings.printWithStamp(logMsg)
         return result
 
