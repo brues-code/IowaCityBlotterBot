@@ -1,5 +1,5 @@
 import re
-from tweepy import TweepError
+from tweepy import TweepyException
 from enums import TweetResult
 from fetchBlotter import fetch
 from settings import settings
@@ -59,7 +59,7 @@ class tweetLogic:
                             newTweet.user.screen_name, newTweet.id_str)
                         logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
                         result = TweetResult.SENT
-                    except TweepError as e:
+                    except TweepyException as e:
                         logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
                         result = TweetResult.ERROR
                 else:

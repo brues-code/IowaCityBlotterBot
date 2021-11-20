@@ -11,6 +11,6 @@ class tweet:
         auth.set_access_token(keys['ACCESS'], keys['ACCESS_SECRET'])
         self.api: tweepy.API = tweepy.API(auth)
 
-    def sendStatus(self, status: str) -> tweepy.Status:
+    def sendStatus(self, status: str) -> tweepy.models.Status:
         placeId = keys['PLACE_ID']
         return self.api.update_status(status, place_id=placeId)

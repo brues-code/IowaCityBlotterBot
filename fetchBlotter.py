@@ -33,8 +33,7 @@ def isTweetable(activityCat, activityDisposition):
     isBlockedCat = [i for i, s in enumerate(
         blockedCategories) if s in activityCat]
     isZCat = [i for i, s in enumerate(zBlock) if activityCat.startswith(s)]
-    isBlockedDisp = [i for i, s in enumerate(
-        blockedDispositions) if s in activityDisposition]
+    isBlockedDisp = [i for i, s in enumerate(blockedDispositions) if s in activityDisposition]
     return not isBlockedCat and not isZCat and not isBlockedDisp
 
 
