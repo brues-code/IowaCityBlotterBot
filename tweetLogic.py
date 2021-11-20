@@ -18,10 +18,8 @@ MAX_TWEET_LEN = 240
 
 def isTweetable(message: str) -> bool:
     message = message.lower()
-    hasBlockedTweets = [i for i, s in enumerate(
-        BLOCKED_TWEETS) if s in message]
-    hasEventTweets = [i for i, s in enumerate(
-        EVENT_BLOCK) if message.startswith(s)]
+    hasBlockedTweets = [i for i, s in enumerate(BLOCKED_TWEETS) if s in message]
+    hasEventTweets = [i for i, s in enumerate(EVENT_BLOCK) if message.startswith(s)]
     return len(message) >= MIN_MESSAGE_LEN and not hasBlockedTweets and not hasEventTweets
 
 
@@ -42,8 +40,7 @@ class tweetLogic:
     def updateIds(self):
         if len(self.dispatchIds) == 0:
             self.dispatchIds = blotFetcher.fetchDispatchIds()
-            settings.printWithStamp("Added %s new ids" %
-                                    (len(self.dispatchIds)))
+            settings.printWithStamp("Added %s new ids" % (len(self.dispatchIds)))
 
     def tweetStatus(self) -> TweetResult:
         result: TweetResult = TweetResult.NOTWEETS
