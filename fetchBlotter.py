@@ -1,6 +1,11 @@
-from urllib.request import build_opener
+import ssl
+import urllib.request
 from bs4 import BeautifulSoup
 from settings import settings
+
+ctx = ssl.create_default_context()
+ctx.check_hostname = False
+ctx.verify_mode = ssl.CERT_NONE
 
 settings = settings()
 
@@ -24,8 +29,9 @@ def fetchSoup(url):
     text = ""
     try:
         settings.printWithStamp("Fetching " + url)
-        text = build_opener().open(url).read().decode('utf-8')
-    except:
+        with urllib.request.urlopen(url, context=ctx) as response:
+            text = response.read()
+    except Exception as e:
         pass
     return BeautifulSoup(text, 'html.parser')
 
