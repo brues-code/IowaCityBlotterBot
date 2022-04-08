@@ -32,6 +32,8 @@ def formatTweet(message: str, idToTweet: str) -> str:
         tweetMsg = "%s #%s" % (msg, idToTweet)
     return tweetMsg
 
+def formatTweetUrl(newTweet):
+    return "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)
 
 class tweetLogic:
     def __init__(self):
@@ -55,8 +57,7 @@ class tweetLogic:
                     try:
                         tweetMsg = formatTweet(dispatchMsg, idToTweet)
                         newTweet = tweet.sendStatus(tweetMsg)
-                        newTweetUrl = "https://twitter.com/%s/status/%s" % (
-                            newTweet.user.screen_name, newTweet.id_str)
+                        newTweetUrl = formatTweetUrl(newTweet)
                         logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
                         result = TweetResult.SENT
                     except TweepyException as e:
