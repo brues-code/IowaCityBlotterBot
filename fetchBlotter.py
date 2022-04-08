@@ -1,6 +1,6 @@
 import ssl
 import urllib.request
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag, ResultSet
 from settings import settings
 
 ctx = ssl.create_default_context()
@@ -42,6 +42,12 @@ def isTweetable(activityCat, activityDisposition):
     isBlockedDisp = [i for i, s in enumerate(blockedDispositions) if s in activityDisposition]
     return not isBlockedCat and not isZCat and not isBlockedDisp
 
+DISPATCH_HEADERS = ["dispatchId", "address", "activity", "disposition", "hasDetails"]
+def rowToDispatchEntry(entry: ResultSet):
+    dispatchEntry = dict() 
+    for index,value in enumerate(entry):
+        dispatchEntry[DISPATCH_HEADERS[index]] = str(value.text).strip()
+    return dispatchEntry
 
 class fetch:
     def __init__(self):
@@ -55,16 +61,12 @@ class fetch:
         dispatchTable = fetchSoup(url).find('tbody')
         if dispatchTable:
             for tRow in dispatchTable:
-                dispatchIdLink = tRow.find('a')
-                if(dispatchIdLink != -1):
-                    dispatchId = dispatchIdLink.text
-                    if dispatchId not in oldDispatchIds:
-                        tds = tRow.find_all('td')
-                        activityCat = str(tds[2].text).strip()
-                        activityDisposition = str(tds[3].text).strip()
-                        hasDetails = tds.pop().text
-                        if hasDetails == 'Y' and isTweetable(activityCat, activityDisposition):
-                            returnArray.append(dispatchId)
+                if isinstance(tRow, Tag):
+                    tds = tRow.find_all('td')
+                    dispatchEntry = rowToDispatchEntry(tds)
+                    if dispatchEntry['dispatchId'] not in oldDispatchIds:
+                        if dispatchEntry['hasDetails'] == 'Y' and isTweetable(dispatchEntry['activity'], dispatchEntry['disposition']):
+                            returnArray.append(dispatchEntry['dispatchId'])
         returnArray.sort()
         return returnArray
 
