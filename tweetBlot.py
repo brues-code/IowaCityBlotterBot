@@ -11,6 +11,10 @@ class tweet:
         auth.set_access_token(keys['ACCESS'], keys['ACCESS_SECRET'])
         self.api: tweepy.API = tweepy.API(auth)
 
-    def sendStatus(self, status: str) -> tweepy.models.Status:
+    def sendStatus(self, status="", fileName="") -> tweepy.models.Status:
         placeId = keys['PLACE_ID']
-        return self.api.update_status(status, place_id=placeId)
+        media_ids = []
+        if fileName != "":
+            media = self.api.media_upload(fileName)
+            media_ids.append(media.media_id)
+        return self.api.update_status(status, place_id=placeId, media_ids=media_ids)
