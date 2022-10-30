@@ -25,14 +25,14 @@ def isTweetable(message: str) -> bool:
     return len(message) >= MIN_MESSAGE_LEN and not hasBlockedTweets and not hasEventTweets
 
 
-def formatTweet(message: str, idToTweet: str):
+def formatTweet(message: str, idToTweet: str) -> str:
     msg = re.sub(r'\s\s+', '\n', message)
     tweetMsg = "%s\n#%s" % (msg, idToTweet)
     if len(tweetMsg) > MAX_TWEET_LEN:
         return ""
     return tweetMsg
 
-def formatTweetUrl(newTweet):
+def formatTweetUrl(newTweet) -> str:
     return "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)
 
 class tweetLogic:
