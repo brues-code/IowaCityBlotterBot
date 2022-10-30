@@ -4,10 +4,12 @@ from enums import TweetResult
 from fetchBlotter import fetch
 from settings import settings
 from tweetBlot import tweet
+from tweetToImg import tweetToImg
 
 blotFetcher = fetch()
 settings = settings()
 tweet = tweet()
+tweetToImg = tweetToImg()
 
 BLOCKED_TWEETS = ["created from mobile", "cfs", "mileage report:"]
 EVENT_BLOCK = ["event", "evnt", "ref amb",
@@ -23,13 +25,11 @@ def isTweetable(message: str) -> bool:
     return len(message) >= MIN_MESSAGE_LEN and not hasBlockedTweets and not hasEventTweets
 
 
-def formatTweet(message: str, idToTweet: str) -> str:
+def formatTweet(message: str, idToTweet: str):
     msg = re.sub(r'\s\s+', '\n', message)
     tweetMsg = "%s\n#%s" % (msg, idToTweet)
     if len(tweetMsg) > MAX_TWEET_LEN:
-        newMsgLen = MAX_TWEET_LEN - (4 + len(str(idToTweet)))
-        msg = (msg[:newMsgLen] + '..') if len(msg) > newMsgLen else msg
-        tweetMsg = "%s #%s" % (msg, idToTweet)
+        return ""
     return tweetMsg
 
 def formatTweetUrl(newTweet):
@@ -56,7 +56,10 @@ class tweetLogic:
                 if isTweetable(dispatchMsg):
                     try:
                         tweetMsg = formatTweet(dispatchMsg, idToTweet)
-                        newTweet = tweet.sendStatus(tweetMsg)
+                        imageFilePath = ""
+                        if tweetMsg == "":
+                            imageFilePath = tweetToImg.convertTweetToImage(idToTweet, dispatchSoup)
+                        newTweet = tweet.sendStatus(tweetMsg, imageFilePath)
                         newTweetUrl = formatTweetUrl(newTweet)
                         logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
                         result = TweetResult.SENT
