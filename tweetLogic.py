@@ -35,6 +35,27 @@ def formatTweet(message: str, idToTweet: str) -> str:
 def formatTweetUrl(newTweet) -> str:
     return "https://twitter.com/%s/status/%s" % (newTweet.user.screen_name, newTweet.id_str)
 
+def processTweet(idToTweet) -> TweetResult:
+    dispatchSoup = blotFetcher.fetchDispatchDetails(idToTweet)
+    if dispatchSoup:
+        dispatchMsg = dispatchSoup.find_all('dd').pop().text.strip()
+        if isTweetable(dispatchMsg):
+            try:
+                tweetMsg = formatTweet(dispatchMsg, idToTweet)
+                imageFilePath = ""
+                if tweetMsg == "":
+                    imageFilePath = tweetToImg.convertTweetToImage(idToTweet, dispatchSoup)
+                newTweet = tweet.sendStatus(tweetMsg, imageFilePath)
+                newTweetUrl = formatTweetUrl(newTweet)
+                settings.printWithStamp("%s\n%s" % (newTweetUrl, tweetMsg))
+                return TweetResult.SENT
+            except TweepyException as e:
+                settings.printWithStamp("Twitter error #%s: '%s'" % (idToTweet, str(e)))
+                return TweetResult.ERROR
+        else:
+            settings.printWithStamp("Didn't tweet #%s: '%s'" % (idToTweet, dispatchMsg))
+    return TweetResult.IGNORED
+
 class tweetLogic:
     def __init__(self):
         self.dispatchIds = []
@@ -46,32 +67,13 @@ class tweetLogic:
 
     def tweetStatus(self) -> TweetResult:
         result: TweetResult = TweetResult.NOTWEETS
-        logMsg = "Nothing to tweet..."
         if len(self.dispatchIds) > 0:
-            result = TweetResult.IGNORED
             idToTweet = self.dispatchIds[0]
-            dispatchSoup = blotFetcher.fetchDispatchDetails(idToTweet)
-            if dispatchSoup:
-                dispatchMsg = dispatchSoup.find_all('dd').pop().text.strip()
-                if isTweetable(dispatchMsg):
-                    try:
-                        tweetMsg = formatTweet(dispatchMsg, idToTweet)
-                        imageFilePath = ""
-                        if tweetMsg == "":
-                            imageFilePath = tweetToImg.convertTweetToImage(idToTweet, dispatchSoup)
-                        newTweet = tweet.sendStatus(tweetMsg, imageFilePath)
-                        newTweetUrl = formatTweetUrl(newTweet)
-                        logMsg = "%s\n%s" % (newTweetUrl, tweetMsg)
-                        result = TweetResult.SENT
-                    except TweepyException as e:
-                        logMsg = "Twitter error #%s: '%s'" % (idToTweet, str(e))
-                        result = TweetResult.ERROR
-                else:
-                    logMsg = "Didn't tweet #%s: '%s'" % (
-                        idToTweet, dispatchMsg)
-                self.dispatchIds.pop(0)
-                settings.saveDispatchId(idToTweet)
-        settings.printWithStamp(logMsg)
+            result = processTweet(idToTweet)
+            self.dispatchIds.pop(0)
+            settings.saveDispatchId(idToTweet)
+        else:
+            settings.printWithStamp("Nothing to tweet...")
         return result
 
     def sendNext(self) -> TweetResult:
