@@ -1,13 +1,13 @@
 import ssl
 import urllib.request
 from bs4 import BeautifulSoup, Tag, ResultSet
-from settings import settings
+from settings import Settings
 
 ctx = ssl.create_default_context()
 ctx.check_hostname = False
 ctx.verify_mode = ssl.CERT_NONE
 
-settings = settings()
+settings = Settings()
 
 blockedCategories: list = [
     "MVA/PROPERTY DAMAGE ACCIDENT",
@@ -25,52 +25,59 @@ blockedCategories: list = [
 zBlock: list = ["Z", "TEST"]
 blockedDispositions: list = ["EMPL ERROR ALARM", "UNK CAUSE ALARM"]
 
-def fetchSoup(url):
+
+def fetch_soup(url):
     text = ""
     try:
-        settings.printWithStamp("Fetching " + url)
+        settings.print_with_stamp("Fetching " + url)
         with urllib.request.urlopen(url, context=ctx) as response:
             text = response.read()
     except Exception as e:
         pass
     return BeautifulSoup(text, 'html.parser')
 
-def isTweetable(activityCat, activityDisposition):
-    isBlockedCat = [i for i, s in enumerate(
-        blockedCategories) if s in activityCat]
-    isZCat = [i for i, s in enumerate(zBlock) if activityCat.startswith(s)]
-    isBlockedDisp = [i for i, s in enumerate(blockedDispositions) if s in activityDisposition]
-    return not isBlockedCat and not isZCat and not isBlockedDisp
+
+def is_tweetable(activity_cat, activity_disposition):
+    is_blocked_cat = [i for i, s in enumerate(
+        blockedCategories) if s in activity_cat]
+    is_z_cat = [i for i, s in enumerate(zBlock) if activity_cat.startswith(s)]
+    is_blocked_disp = [i for i, s in enumerate(blockedDispositions) if s in activity_disposition]
+    return not is_blocked_cat and not is_z_cat and not is_blocked_disp
+
 
 DISPATCH_HEADERS = ["dispatchId", "address", "activity", "disposition", "hasDetails"]
-def rowToDispatchEntry(entry: ResultSet):
-    dispatchEntry = dict() 
-    for index,value in enumerate(entry):
-        dispatchEntry[DISPATCH_HEADERS[index]] = str(value.text).strip()
-    return dispatchEntry
 
-class fetch:
+
+def row_to_dispatch_entry(entry: ResultSet):
+    dispatch_entry = dict()
+    for index, value in enumerate(entry):
+        dispatch_entry[DISPATCH_HEADERS[index]] = str(value.text).strip()
+    return dispatch_entry
+
+
+class Fetch:
     def __init__(self):
         pass
 
-    def fetchDispatchIds(self) -> list:
-        returnArray = []
-        oldDispatchIds = settings.fetchOldDispatchIds()
-        dateStamp = settings.getDateStamp()
-        url = settings.getListUrl(dateStamp)
-        dispatchTable = fetchSoup(url).find('tbody')
-        if dispatchTable:
-            for tRow in dispatchTable:
+    def fetch_dispatch_ids(self) -> list:
+        return_array = []
+        old_dispatch_ids = settings.fetch_old_dispatch_ids()
+        date_stamp = settings.get_date_stamp()
+        url = settings.get_list_url(date_stamp)
+        dispatch_table = fetch_soup(url).find('tbody')
+        if dispatch_table:
+            for tRow in dispatch_table:
                 if isinstance(tRow, Tag):
                     tds = tRow.find_all('td')
-                    dispatchEntry = rowToDispatchEntry(tds)
-                    if dispatchEntry['dispatchId'] not in oldDispatchIds:
-                        if dispatchEntry['hasDetails'] == 'Y' and isTweetable(dispatchEntry['activity'], dispatchEntry['disposition']):
-                            returnArray.append(dispatchEntry['dispatchId'])
-        returnArray.sort()
-        return returnArray
+                    dispatch_entry = row_to_dispatch_entry(tds)
+                    if dispatch_entry['dispatchId'] not in old_dispatch_ids:
+                        if dispatch_entry['hasDetails'] == 'Y' \
+                                and is_tweetable(dispatch_entry['activity'], dispatch_entry['disposition']):
+                            return_array.append(dispatch_entry['dispatchId'])
+        return_array.sort()
+        return return_array
 
-    def fetchDispatchDetails(self, id: str) -> str:
-        url = settings.getDispatchUrl(id)
-        return fetchSoup(url).find('dl')
+    def fetch_dispatch_details(self, id: str) -> str:
+        url = settings.get_dispatch_url(id)
+        return fetch_soup(url).find('dl')
         # return fetchSoup(url).find_all('dd').pop().text

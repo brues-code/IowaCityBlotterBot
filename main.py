@@ -1,15 +1,15 @@
 from sched import scheduler
 from time import sleep, time
-from tweetLogic import tweetLogic
+from tweetLogic import TweetLogic
 
 s = scheduler(time, sleep)
-_tweetLogic = tweetLogic()
+_tweetLogic = TweetLogic()
 
 
-def doATweet(sc):
-    secs = _tweetLogic.sendNext()
-    s.enter(secs.value, 1, doATweet, (sc,))
+def do_a_tweet(sc):
+    secs = _tweetLogic.send_next()
+    s.enter(secs.value, 1, do_a_tweet, (sc,))
 
 
-s.enter(1, 1, doATweet, (s,))
+s.enter(1, 1, do_a_tweet, (s,))
 s.run()

@@ -9,81 +9,81 @@ IC_ROOT_URL = 'https://www.iowa-city.org/icgovapps/police/'
 DATE_STAMP_HOUR_DELAY = 5
 
 
-class settings:
+class Settings:
     def __init__(self):
         pass
 
-    def getDispatchFileName(self) -> str:
-        return "%s/%s.txt" % (CACHE_DIRECTORY, self.getDateStamp())
+    def get_dispatch_file_name(self) -> str:
+        return "%s/%s.txt" % (CACHE_DIRECTORY, self.get_date_stamp())
 
-    def fetchOldDispatchIds(self) -> list:
-        returnIds = []
-        dispatchFileName = self.getDispatchFileName()
+    def fetch_old_dispatch_ids(self) -> list:
+        return_ids = []
+        dispatch_file_name = self.get_dispatch_file_name()
         try:
             if not os.path.exists(CACHE_DIRECTORY):
                 os.makedirs(CACHE_DIRECTORY)
-            f = open(dispatchFileName, "r")
+            f = open(dispatch_file_name, "r")
             if f.readable():
                 text: str = f.read()
-                if(len(text) > 0):
-                    returnIds = text.split(',')
+                if len(text) > 0:
+                    return_ids = text.split(',')
             f.close()
         except:
             pass
-        self.deleteOldDispatchIds()
-        return returnIds
+        self.delete_old_dispatch_ids()
+        return return_ids
 
-    def saveDispatchId(self, dispatchId: str):
-        f = open(self.getDispatchFileName(), "a")
+    def save_dispatch_id(self, dispatch_id: str):
+        f = open(self.get_dispatch_file_name(), "a")
         if f.writable():
-            f.write("%s," % (dispatchId))
+            f.write("%s," % dispatch_id)
         f.close()
 
-    def deleteOldDispatchIds(self):
+    def delete_old_dispatch_ids(self):
         current_time = time.time()
         for f in os.listdir(CACHE_DIRECTORY):
-            fileName = "%s%s" % (CACHE_DIRECTORY, f)
-            creation_time = os.path.getctime(fileName)
+            file_name = "%s%s" % (CACHE_DIRECTORY, f)
+            creation_time = os.path.getctime(file_name)
             if (current_time - creation_time) // (24 * 3600) >= 2:
-                os.unlink(fileName)
-                self.printWithStamp('{} removed'.format(fileName))
+                os.unlink(file_name)
+                self.print_with_stamp('{} removed'.format(file_name))
 
-    def getSettings(self):
+    def get_settings(self):
         f = open(SETTINGS_FILE, "r")
         if f.readable():
             return eval(f.read())
         f.close()
 
-    def getListUrl(self, date: str) -> str:
+    def get_list_url(self, date: str) -> str:
         return "%sactivitylog?activityDate=%s" % (IC_ROOT_URL, date)
 
-    def getDispatchUrl(self, dispatchId: str) -> str:
-        return "%sdetails?dispatchNumber=%s" % (IC_ROOT_URL, dispatchId)
+    def get_dispatch_url(self, dispatch_id: str) -> str:
+        return "%sdetails?dispatchNumber=%s" % (IC_ROOT_URL, dispatch_id)
 
-    def printWithStamp(self, inputStr: str):
+    def print_with_stamp(self, input_str: str):
         st = datetime.now().strftime('%H:%M:%S')
-        outputStr = "[%s]: %s" % (st, inputStr)
-        self.addToLog(outputStr)
-        print(outputStr)
+        output_str = "[%s]: %s" % (st, input_str)
+        self.add_to_log(output_str)
+        print(output_str)
 
-    def addToLog(self, logMessage: str):
-        logDirectory = "%s%s" %  (LOG_DIRECTORY, self.getDateDirectory())
-        if not os.path.exists(logDirectory):
-            os.makedirs(logDirectory)
-        f = open("%s%s.txt" % (logDirectory, self.getDateStamp()), "a")
+    def add_to_log(self, log_message: str):
+        log_directory = "%s%s" %  (LOG_DIRECTORY, self.get_date_directory())
+        if not os.path.exists(log_directory):
+            os.makedirs(log_directory)
+        f = open("%s%s.txt" % (log_directory, self.get_date_stamp()), "a")
         if f.writable():
-            f.write(logMessage + "\n")
+            f.write(log_message + "\n")
         f.close()
 
-    def getDate(self) -> datetime:
-        return (datetime.now() - timedelta(hours=DATE_STAMP_HOUR_DELAY))
+    def get_date(self) -> datetime:
+        return datetime.now() - timedelta(hours=DATE_STAMP_HOUR_DELAY)
 
-    def getDateStamp(self) -> str:
-        return self.getDate().strftime('%m-%d-%Y')
+    def get_date_stamp(self) -> str:
+        return self.get_date().strftime('%m-%d-%Y')
 
-    def getDateDirectory(self) -> str:
-        date = self.getDate()
+    def get_date_directory(self) -> str:
+        date = self.get_date()
         month = date.month
-        if(month < 10):
-            month = "0%s" % (month)
+        if month < 10:
+            month = "0%s" % month
         return '%s/%s/' % (date.year, month)
