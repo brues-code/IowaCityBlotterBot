@@ -29,7 +29,9 @@ def format_tweet(message: str, id_to_tweet: str) -> str:
     msg = re.sub(r'\s\s+', '\n', message)
     tweet_msg = "%s\n#%s" % (msg, id_to_tweet)
     if len(tweet_msg) > MAX_TWEET_LEN:
-        return ""
+        newMsgLen = MAX_TWEET_LEN - (4 + len(str(id_to_tweet)))
+        msg = (msg[:newMsgLen] + '..') if len(msg) > newMsgLen else msg
+        tweet_msg = "%s #%s" % (msg, id_to_tweet)
     return tweet_msg
 
 
@@ -45,8 +47,8 @@ def process_tweet(idToTweet) -> TweetResult:
             try:
                 tweet_msg = format_tweet(dispatch_msg, idToTweet)
                 image_file_path = ""
-                if tweet_msg == "":
-                    image_file_path = TweetToImg.convert_tweet_to_image(idToTweet, dispatch_soup)
+                #if tweet_msg == "":
+                    # image_file_path = TweetToImg.convert_tweet_to_image(idToTweet, dispatch_soup)
                 new_tweet = tweet.send_status(tweet_msg, image_file_path)
                 new_tweet_url = format_tweet_url(new_tweet)
                 settings.print_with_stamp("%s\n%s" % (new_tweet_url, tweet_msg))
